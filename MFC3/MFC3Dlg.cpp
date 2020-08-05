@@ -52,6 +52,7 @@ END_MESSAGE_MAP()
 CMFC3Dlg::CMFC3Dlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MFC3_DIALOG, pParent)
 	, name(_T(""))
+	, birthday(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -61,6 +62,7 @@ void CMFC3Dlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Text(pDX, txtName, name);
 	DDX_Control(pDX, IDC_LIST2, listctrl);
+	DDX_Text(pDX, txtBirthday, birthday);
 }
 
 BEGIN_MESSAGE_MAP(CMFC3Dlg, CDialogEx)
@@ -69,7 +71,7 @@ BEGIN_MESSAGE_MAP(CMFC3Dlg, CDialogEx)
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON1, &CMFC3Dlg::OnBnClickedButton1)
 	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST2, &CMFC3Dlg::OnLvnItemchangedList2)
-	ON_BN_CLICKED(btnDrag, &CMFC3Dlg::OnBnClickedbtndrag)
+	ON_BN_CLICKED(btnInsert, &CMFC3Dlg::OnBnClickedbtninsert)
 END_MESSAGE_MAP()
 
 
@@ -137,6 +139,7 @@ void CMFC3Dlg::OnPaint()
 		// Center icon in client rectangle
 		int cxIcon = GetSystemMetrics(SM_CXICON);
 		int cyIcon = GetSystemMetrics(SM_CYICON);
+		data.Open("C:\\DataBase\\first.db");
 		CRect rect;
 		GetClientRect(&rect);
 		int x = (rect.Width() - cxIcon + 1) / 2;
@@ -163,7 +166,8 @@ HCURSOR CMFC3Dlg::OnQueryDragIcon()
 void CMFC3Dlg::OnBnClickedButton1()
 {
 	std::list<userData> dataList;
-	data.insertData(dataList);
+	data.bindName(dataList, name);
+	data.selectData(dataList);
 }
 
 
@@ -175,17 +179,8 @@ void CMFC3Dlg::OnLvnItemchangedList2(NMHDR *pNMHDR, LRESULT *pResult)
 }
 
 
-void CMFC3Dlg::OnBnClickedbtndrag()
+void CMFC3Dlg::OnBnClickedbtninsert()
 {
-	try {
-		data.Open("C:\\DataBase\\first.db");
-		fileOperations op;
-		data.bindName(dataList, name);
-
-		data.selectData(dataList);
-		data.~SQL();
-	}
-	catch (SQLException &ex) {
-		std::cerr << "An exception occurred: " << ex.what() << ", error number " << ex.geterrcode();
-	}
+	std::list<userData> dataList;
+	data.insertData(dataList);
 }
