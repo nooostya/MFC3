@@ -3,6 +3,10 @@
 //
 
 #pragma once
+#include "SQL.h"
+#include "fileOperations.h"
+#include "userData.h"
+#include <string>
 
 
 // CMFC3Dlg dialog
@@ -31,4 +35,11 @@ protected:
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnBnClickedButton1();
+	CString name;
+	CListCtrl listctrl;
+	SQL data;	
+	afx_msg void OnLvnItemchangedList2(NMHDR *pNMHDR, LRESULT *pResult);
+	afx_msg void OnBnClickedbtndrag();
 };
