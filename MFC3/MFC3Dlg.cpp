@@ -178,7 +178,7 @@ void CMFC3Dlg::OnBnClickedButton1()
 
 		int nItem=listctrl.InsertItem(0, cvtStr);
 
-		std::wstring birthdayStr(std::to_wstring(it->birthday));
+		std::wstring birthdayStr( std::to_wstring(it->birthday));
 		
 		listctrl.SetItemText(nItem,1, birthdayStr.c_str());
 	}
@@ -201,6 +201,24 @@ void CMFC3Dlg::OnLvnItemchangedList2(NMHDR *pNMHDR, LRESULT *pResult)
 
 void CMFC3Dlg::OnBnClickedbtninsert()
 {
+	UpdateData(TRUE);
+	try {
 	std::list<userData> dataList;
 	data.insertData(dataList);
+	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)
+	{
+		CA2W cvtStr(it->name.c_str());
+
+		int nItem = listctrl.InsertItem(0, cvtStr);
+
+		std::wstring birthdayStr(std::to_wstring(it->birthday));
+
+		listctrl.SetItemText(nItem, 1, birthdayStr.c_str());
+	}
+
+	}
+	catch (SQLException &ex)
+	{
+		MessageBoxA(NULL, ex.what(), "error", MB_OK);
+	}
 }
