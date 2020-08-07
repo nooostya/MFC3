@@ -10,7 +10,6 @@ class  __declspec(dllexport) SQL {
 private:
 	
 	sqlite3* db;
-	char name;
 	
 
 public:

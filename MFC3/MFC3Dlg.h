@@ -37,11 +37,12 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedButton1();
-	CString name;
 	CListCtrl listctrl;
 	SQL data;
 	fileOperations op;
 	afx_msg void OnLvnItemchangedList2(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnBnClickedbtninsert();
 	CString birthday;
+
+	CString name;
 };

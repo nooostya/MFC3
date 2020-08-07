@@ -6,10 +6,12 @@
 #include "MFC3.h"
 #include "MFC3Dlg.h"
 #include "afxdialogex.h"
+#include <string>
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
+
 
 
 // CAboutDlg dialog used for App About
@@ -51,8 +53,8 @@ END_MESSAGE_MAP()
 
 CMFC3Dlg::CMFC3Dlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MFC3_DIALOG, pParent)
-	, name(_T(""))
 	, birthday(_T(""))
+	, name(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -60,9 +62,9 @@ CMFC3Dlg::CMFC3Dlg(CWnd* pParent /*=nullptr*/)
 void CMFC3Dlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Text(pDX, txtName, name);
 	DDX_Control(pDX, IDC_LIST2, listctrl);
 	DDX_Text(pDX, txtBirthday, birthday);
+	DDX_Text(pDX, txtName, name);
 }
 
 BEGIN_MESSAGE_MAP(CMFC3Dlg, CDialogEx)
@@ -108,6 +110,7 @@ BOOL CMFC3Dlg::OnInitDialog()
 
 	listctrl.InsertColumn(0, L"Name", LVCFMT_LEFT, 150);
 	listctrl.InsertColumn(2, L"Birthday", LVCFMT_LEFT, 100);
+	data.Open("C:\\DataBase\\first.db");
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -139,7 +142,6 @@ void CMFC3Dlg::OnPaint()
 		// Center icon in client rectangle
 		int cxIcon = GetSystemMetrics(SM_CXICON);
 		int cyIcon = GetSystemMetrics(SM_CYICON);
-		data.Open("C:\\DataBase\\first.db");
 		CRect rect;
 		GetClientRect(&rect);
 		int x = (rect.Width() - cxIcon + 1) / 2;
@@ -162,12 +164,21 @@ HCURSOR CMFC3Dlg::OnQueryDragIcon()
 }
 
 
-
 void CMFC3Dlg::OnBnClickedButton1()
 {
+	UpdateData(TRUE);
+	try{
+	CT2CA pszConvertedAnsiString(name);
+	std::string n(pszConvertedAnsiString);
 	std::list<userData> dataList;
-	data.bindName(dataList, name);
+	data.bindName(dataList, n);
 	data.selectData(dataList);
+
+	}
+	catch (SQLException &ex) 
+	{
+		MessageBoxA(NULL, ex.what(),"error",MB_OK);
+	}
 }
 
 
