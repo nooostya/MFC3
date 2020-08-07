@@ -172,7 +172,16 @@ void CMFC3Dlg::OnBnClickedButton1()
 	std::string n(pszConvertedAnsiString);
 	std::list<userData> dataList;
 	data.bindName(dataList, n);
-	data.selectData(dataList);
+	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)
+	{
+		CA2W cvtStr(it->name.c_str());
+
+		int nItem=listctrl.InsertItem(0, cvtStr);
+
+		std::wstring birthdayStr(std::to_wstring(it->birthday));
+		
+		listctrl.SetItemText(nItem,1, birthdayStr.c_str());
+	}
 
 	}
 	catch (SQLException &ex) 
