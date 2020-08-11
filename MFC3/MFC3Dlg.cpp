@@ -71,7 +71,6 @@ BEGIN_MESSAGE_MAP(CMFC3Dlg, CDialogEx)
 	ON_BN_CLICKED(btnInsert, &CMFC3Dlg::OnBnClickedbtninsert)
 	ON_BN_CLICKED(btnReset, &CMFC3Dlg::OnBnClickedbtnreset)
 	ON_EN_CHANGE(txtName2, &CMFC3Dlg::OnEnChangetxtname2)
-	ON_BN_CLICKED(btnDeleteItem, &CMFC3Dlg::OnBnClickedbtndeleteitem)
 END_MESSAGE_MAP()
 
 
@@ -283,4 +282,5 @@ void CMFC3Dlg::OnBnClickedbtndeleteitem()
 			ASSERT(nItem != -1);
 			listctrl.DeleteItem(nItem);
 		}
+	data.DeleteItem();
 }

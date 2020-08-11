@@ -19,6 +19,7 @@ public:
 	void Open(const char* dir);
 	void createTable();
 	int createIndex();
+	int DeleteItem();
 	void insertData(UserDataList& dataList);
 	int DataIntoList(UserDataList& dataList);
 	int bindName(UserDataList& dataList, std::string name);
