@@ -20,6 +20,7 @@ public:
 	void createTable();
 	int createIndex();
 	void insertData(UserDataList& dataList);
+	int DataIntoList(UserDataList& dataList);
 	int bindName(UserDataList& dataList, std::string name);
 	int selectData(UserDataList& dataList);
 	

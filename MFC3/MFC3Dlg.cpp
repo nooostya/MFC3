@@ -12,8 +12,6 @@
 #define new DEBUG_NEW
 #endif
 
-
-
 // CAboutDlg dialog used for App About
 
 class CAboutDlg : public CDialogEx
@@ -33,7 +31,8 @@ public:
 protected:
 	DECLARE_MESSAGE_MAP()
 };
-
+BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+END_MESSAGE_MAP()
 CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
 {
 }
@@ -43,18 +42,13 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 }
 
-BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
-END_MESSAGE_MAP()
-
-
-// CMFC3Dlg dialog
-
 
 
 CMFC3Dlg::CMFC3Dlg(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_MFC3_DIALOG, pParent)
 	, birthday(_T(""))
 	, name(_T(""))
+	, name_f(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -65,6 +59,7 @@ void CMFC3Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_LIST2, listctrl);
 	DDX_Text(pDX, txtBirthday, birthday);
 	DDX_Text(pDX, txtName, name);
+	DDX_Text(pDX, txtName2, name_f);
 }
 
 BEGIN_MESSAGE_MAP(CMFC3Dlg, CDialogEx)
@@ -74,6 +69,9 @@ BEGIN_MESSAGE_MAP(CMFC3Dlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON1, &CMFC3Dlg::OnBnClickedButton1)
 	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST2, &CMFC3Dlg::OnLvnItemchangedList2)
 	ON_BN_CLICKED(btnInsert, &CMFC3Dlg::OnBnClickedbtninsert)
+	ON_BN_CLICKED(btnReset, &CMFC3Dlg::OnBnClickedbtnreset)
+	ON_EN_CHANGE(txtName2, &CMFC3Dlg::OnEnChangetxtname2)
+	ON_BN_CLICKED(btnDeleteItem, &CMFC3Dlg::OnBnClickedbtndeleteitem)
 END_MESSAGE_MAP()
 
 
@@ -111,6 +109,19 @@ BOOL CMFC3Dlg::OnInitDialog()
 	listctrl.InsertColumn(0, L"Name", LVCFMT_LEFT, 150);
 	listctrl.InsertColumn(2, L"Birthday", LVCFMT_LEFT, 100);
 	data.Open("C:\\DataBase\\first.db");
+	std::list<userData> dataList;
+	data.DataIntoList(dataList);
+	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
+	{
+		CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
+
+		int nItem = listctrl.InsertItem(0, cvtStr);
+
+		std::wstring birthdayStr(std::to_wstring(it->birthday));
+
+		listctrl.SetItemText(nItem, 1, birthdayStr.c_str());
+	}
+	
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -167,14 +178,15 @@ HCURSOR CMFC3Dlg::OnQueryDragIcon()
 void CMFC3Dlg::OnBnClickedButton1()
 {
 	UpdateData(TRUE);
+	listctrl.DeleteAllItems();
 	try{
-	CT2CA pszConvertedAnsiString(name);
+	CT2CA pszConvertedAnsiString(name_f);//Converting an MFC CString to a std::string
 	std::string n(pszConvertedAnsiString);
 	std::list<userData> dataList;
 	data.bindName(dataList, n);
-	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)
+	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
 	{
-		CA2W cvtStr(it->name.c_str());
+		CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
 
 		int nItem=listctrl.InsertItem(0, cvtStr);
 
@@ -204,8 +216,14 @@ void CMFC3Dlg::OnBnClickedbtninsert()
 	UpdateData(TRUE);
 	try {
 	std::list<userData> dataList;
+	userData c;
+	CT2CA pszConvertedAnsiString(name);//Converting an MFC CString to a std::string
+	std::string n(pszConvertedAnsiString);
+	c.name = n;
+	c.birthday = _wtoi(birthday);
+	dataList.push_back(c);
 	data.insertData(dataList);
-	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)
+	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
 	{
 		CA2W cvtStr(it->name.c_str());
 
@@ -221,4 +239,44 @@ void CMFC3Dlg::OnBnClickedbtninsert()
 	{
 		MessageBoxA(NULL, ex.what(), "error", MB_OK);
 	}
+}
+
+void CMFC3Dlg::OnBnClickedbtnreset()
+{
+	std::list<userData> dataList;
+	data.DataIntoList(dataList);
+	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
+	{
+		CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
+
+		int nItem = listctrl.InsertItem(0, cvtStr);
+
+		std::wstring birthdayStr(std::to_wstring(it->birthday));
+
+		listctrl.SetItemText(nItem, 1, birthdayStr.c_str());
+	}
+	txtName2.SetWindowText(_T(""));
+}
+
+
+void CMFC3Dlg::OnEnChangetxtname2()
+{
+	// TODO:  If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialogEx::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+
+	// TODO:  Add your control notification handler code here
+}
+
+void CMFC3Dlg::OnBnClickedbtndeleteitem()
+{
+	int i, nItem, uSelectedCount = listctrl.GetSelectedCount();
+	if (uSelectedCount > 0)
+		for (i = 0; i < uSelectedCount; i++)
+		{
+			nItem = listctrl.GetNextItem(-1, LVNI_SELECTED);
+			ASSERT(nItem != -1);
+			listctrl.DeleteItem(nItem);
+		}
 }

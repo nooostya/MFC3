@@ -43,6 +43,9 @@ public:
 	afx_msg void OnLvnItemchangedList2(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnBnClickedbtninsert();
 	CString birthday;
-
 	CString name;
+	CString name_f;
+	afx_msg void OnBnClickedbtnreset();
+	afx_msg void OnEnChangetxtname2();
+	afx_msg void OnBnClickedbtndeleteitem();
 };
