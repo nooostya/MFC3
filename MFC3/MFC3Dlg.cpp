@@ -239,6 +239,9 @@ void CMFC3Dlg::OnBnClickedbtninsert()
 	{
 		MessageBoxA(NULL, ex.what(), "error", MB_OK);
 	}
+	name = "";
+	birthday = "";
+	UpdateData(FALSE);
 }
 
 void CMFC3Dlg::OnBnClickedbtnreset()
@@ -255,7 +258,8 @@ void CMFC3Dlg::OnBnClickedbtnreset()
 
 		listctrl.SetItemText(nItem, 1, birthdayStr.c_str());
 	}
-	txtName2.SetWindowText(_T(""));
+	name_f = "";
+	UpdateData(FALSE);
 }
 
 
