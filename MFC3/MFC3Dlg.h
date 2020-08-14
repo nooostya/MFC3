@@ -45,9 +45,8 @@ public:
 	CString birthday;
 	CString name;
 	CString name_f;
-	int number;
 	afx_msg void OnBnClickedbtnreset();
 	afx_msg void OnEnChangetxtname2();
-	afx_msg void OnBnClickedbtndeleteitem();
 
+	afx_msg void OnBnClickedbtndelete();
 };

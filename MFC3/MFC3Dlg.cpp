@@ -71,6 +71,7 @@ BEGIN_MESSAGE_MAP(CMFC3Dlg, CDialogEx)
 	ON_BN_CLICKED(btnInsert, &CMFC3Dlg::OnBnClickedbtninsert)
 	ON_BN_CLICKED(btnReset, &CMFC3Dlg::OnBnClickedbtnreset)
 	ON_EN_CHANGE(txtName2, &CMFC3Dlg::OnEnChangetxtname2)
+	ON_BN_CLICKED(btnDelete, &CMFC3Dlg::OnBnClickedbtndelete)
 END_MESSAGE_MAP()
 
 
@@ -113,11 +114,13 @@ BOOL CMFC3Dlg::OnInitDialog()
 	data.DataIntoList(dataList);
 	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
 	{
-		std::wstring nameStr(std::to_wstring(number));
-		int nItem = listctrl.InsertItem(0, nameStr.c_str());
+		int itemCount=listctrl.GetItemCount();
+		std::wstring numberStr(std::to_wstring(it->number));
+		int nItem = listctrl.InsertItem(itemCount, numberStr.c_str());
+
 		CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
 
-		listctrl.SetItemText(number, 1, cvtStr);
+		listctrl.SetItemText(nItem, 1, cvtStr);
 
 		std::wstring birthdayStr(std::to_wstring(it->birthday));
 
@@ -189,15 +192,15 @@ void CMFC3Dlg::OnBnClickedButton1()
 	
 	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
 	{
-		std::wstring nameStr(std::to_wstring(number));
-		int nItem = listctrl.InsertItem(0,nameStr.c_str() );
+		std::wstring nameStr(std::to_wstring(it->number));
+		int nItem = listctrl.InsertItem(0, nameStr.c_str());
 		CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
 
-		listctrl.SetItemText(number, 1, cvtStr);
+		listctrl.SetItemText(it->number, 1, cvtStr);
 
-		std::wstring birthdayStr( std::to_wstring(it->birthday));
-		
-		listctrl.SetItemText(nItem,2, birthdayStr.c_str());
+		std::wstring birthdayStr(std::to_wstring(it->birthday));
+
+		listctrl.SetItemText(nItem, 2, birthdayStr.c_str());
 	}
 
 	}
@@ -230,11 +233,11 @@ void CMFC3Dlg::OnBnClickedbtninsert()
 	data.insertData(dataList);
 	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
 	{
-		std::wstring nameStr(std::to_wstring(number));
+		std::wstring nameStr(std::to_wstring(it->number));
 		int nItem = listctrl.InsertItem(0, nameStr.c_str());
 		CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
 
-		listctrl.SetItemText(number, 1, cvtStr);
+		listctrl.SetItemText(it->number, 1, cvtStr);
 
 		std::wstring birthdayStr(std::to_wstring(it->birthday));
 
@@ -258,11 +261,11 @@ void CMFC3Dlg::OnBnClickedbtnreset()
 	
 	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
 	{
-		std::wstring nameStr(std::to_wstring(number));
+		std::wstring nameStr(std::to_wstring(it->number));
 		int nItem = listctrl.InsertItem(0, nameStr.c_str());
 		CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
 
-		listctrl.SetItemText(number, 1, cvtStr);
+		listctrl.SetItemText(it->number, 1, cvtStr);
 
 		std::wstring birthdayStr(std::to_wstring(it->birthday));
 
@@ -283,15 +286,21 @@ void CMFC3Dlg::OnEnChangetxtname2()
 	// TODO:  Add your control notification handler code here
 }
 
-void CMFC3Dlg::OnBnClickedbtndeleteitem()
+void CMFC3Dlg::OnBnClickedbtndelete()
 {
-	int i, nItem, uSelectedCount = listctrl.GetSelectedCount();
-	if (uSelectedCount > 0)
-		for (i = 0; i < uSelectedCount; i++)
+	std::list<userData> dataList;
+	POSITION pos = listctrl.GetFirstSelectedItemPosition();
+	if (pos == NULL)
+	{
+		MessageBox(NULL, L"No items were selected!");
+	}
+	else
+	{
+		while (pos)
 		{
-			nItem = listctrl.GetNextItem(-1, LVNI_SELECTED);
-			ASSERT(nItem != -1);
-			listctrl.DeleteItem(nItem);
+			int nItem = listctrl.GetNextSelectedItem(pos);
+			MessageBox(NULL, L"items were selected!");
+			data.DeleteItem();
 		}
-	//data.DeleteItem();
+	}
 }
