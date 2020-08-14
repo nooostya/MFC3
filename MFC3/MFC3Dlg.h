@@ -39,6 +39,7 @@ public:
 	afx_msg void OnBnClickedButton1();
 	CListCtrl listctrl;
 	SQL data;
+	int number;
 	fileOperations op;
 	afx_msg void OnLvnItemchangedList2(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnBnClickedbtninsert();
