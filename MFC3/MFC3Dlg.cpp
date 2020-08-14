@@ -105,20 +105,23 @@ BOOL CMFC3Dlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 
-	listctrl.InsertColumn(0, L"Name", LVCFMT_LEFT, 150);
+	listctrl.InsertColumn(3, L"Name", LVCFMT_LEFT, 150);
 	listctrl.InsertColumn(2, L"Birthday", LVCFMT_LEFT, 100);
+	listctrl.InsertColumn(0, L"RowID", LVCFMT_LEFT, 100);
 	data.Open("C:\\DataBase\\first.db");
 	std::list<userData> dataList;
 	data.DataIntoList(dataList);
 	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
 	{
+		std::wstring nameStr(std::to_wstring(number));
+		int nItem = listctrl.InsertItem(0, nameStr.c_str());
 		CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
 
-		int nItem = listctrl.InsertItem(0, cvtStr);
+		listctrl.SetItemText(number, 1, cvtStr);
 
 		std::wstring birthdayStr(std::to_wstring(it->birthday));
 
-		listctrl.SetItemText(nItem, 1, birthdayStr.c_str());
+		listctrl.SetItemText(nItem, 2, birthdayStr.c_str());
 	}
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
@@ -183,15 +186,18 @@ void CMFC3Dlg::OnBnClickedButton1()
 	std::string n(pszConvertedAnsiString);
 	std::list<userData> dataList;
 	data.bindName(dataList, n);
+	
 	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
 	{
+		std::wstring nameStr(std::to_wstring(number));
+		int nItem = listctrl.InsertItem(0,nameStr.c_str() );
 		CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
 
-		int nItem=listctrl.InsertItem(0, cvtStr);
+		listctrl.SetItemText(number, 1, cvtStr);
 
 		std::wstring birthdayStr( std::to_wstring(it->birthday));
 		
-		listctrl.SetItemText(nItem,1, birthdayStr.c_str());
+		listctrl.SetItemText(nItem,2, birthdayStr.c_str());
 	}
 
 	}
@@ -224,13 +230,15 @@ void CMFC3Dlg::OnBnClickedbtninsert()
 	data.insertData(dataList);
 	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
 	{
-		CA2W cvtStr(it->name.c_str());
+		std::wstring nameStr(std::to_wstring(number));
+		int nItem = listctrl.InsertItem(0, nameStr.c_str());
+		CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
 
-		int nItem = listctrl.InsertItem(0, cvtStr);
+		listctrl.SetItemText(number, 1, cvtStr);
 
 		std::wstring birthdayStr(std::to_wstring(it->birthday));
 
-		listctrl.SetItemText(nItem, 1, birthdayStr.c_str());
+		listctrl.SetItemText(nItem, 2, birthdayStr.c_str());
 	}
 
 	}
@@ -247,15 +255,18 @@ void CMFC3Dlg::OnBnClickedbtnreset()
 {
 	std::list<userData> dataList;
 	data.DataIntoList(dataList);
+	
 	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
 	{
+		std::wstring nameStr(std::to_wstring(number));
+		int nItem = listctrl.InsertItem(0, nameStr.c_str());
 		CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
 
-		int nItem = listctrl.InsertItem(0, cvtStr);
+		listctrl.SetItemText(number, 1, cvtStr);
 
 		std::wstring birthdayStr(std::to_wstring(it->birthday));
 
-		listctrl.SetItemText(nItem, 1, birthdayStr.c_str());
+		listctrl.SetItemText(nItem, 2, birthdayStr.c_str());
 	}
 	name_f = "";
 	UpdateData(FALSE);
@@ -282,5 +293,5 @@ void CMFC3Dlg::OnBnClickedbtndeleteitem()
 			ASSERT(nItem != -1);
 			listctrl.DeleteItem(nItem);
 		}
-	data.DeleteItem();
+	//data.DeleteItem();
 }
