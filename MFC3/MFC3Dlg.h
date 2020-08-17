@@ -50,4 +50,5 @@ public:
 	afx_msg void OnEnChangetxtname2();
 
 	afx_msg void OnBnClickedbtndelete();
+	CString Nnumber;
 };

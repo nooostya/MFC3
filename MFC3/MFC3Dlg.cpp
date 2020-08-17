@@ -49,6 +49,7 @@ CMFC3Dlg::CMFC3Dlg(CWnd* pParent /*=nullptr*/)
 	, birthday(_T(""))
 	, name(_T(""))
 	, name_f(_T(""))
+	, Nnumber(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 }
@@ -60,6 +61,7 @@ void CMFC3Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, txtBirthday, birthday);
 	DDX_Text(pDX, txtName, name);
 	DDX_Text(pDX, txtName2, name_f);
+	DDX_Text(pDX, txtNumber2, Nnumber);
 }
 
 BEGIN_MESSAGE_MAP(CMFC3Dlg, CDialogEx)
@@ -194,6 +196,7 @@ void CMFC3Dlg::OnBnClickedButton1()
 	{
 		int itemCount = listctrl.GetItemCount();
 		std::wstring numberStr(std::to_wstring(it->number));
+
 		int nItem = listctrl.InsertItem(itemCount, numberStr.c_str());
 
 		CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
@@ -231,6 +234,7 @@ void CMFC3Dlg::OnBnClickedbtninsert()
 	std::string n(pszConvertedAnsiString);
 	c.name = n;
 	c.birthday = _wtoi(birthday);
+	c.number = _wtoi(Nnumber);
 	dataList.push_back(c);
 	data.insertData(dataList);
 	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
@@ -253,6 +257,7 @@ void CMFC3Dlg::OnBnClickedbtninsert()
 	{
 		MessageBoxA(NULL, ex.what(), "error", MB_OK);
 	}
+	Nnumber = "";
 	name = "";
 	birthday = "";
 	UpdateData(FALSE);
@@ -262,7 +267,7 @@ void CMFC3Dlg::OnBnClickedbtnreset()
 {
 	std::list<userData> dataList;
 	data.DataIntoList(dataList);
-	
+	listctrl.DeleteAllItems();
 	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
 	{
 		int itemCount = listctrl.GetItemCount();
@@ -306,7 +311,6 @@ void CMFC3Dlg::OnBnClickedbtndelete()
 		while (pos)
 		{
 			int nItem = listctrl.GetNextSelectedItem(pos);
-			MessageBox(NULL, L"items were selected!");
 			CString numb = listctrl.GetItemText(nItem,0);
 			number = _ttoi(numb);
 			data.DeleteItem(dataList,number);
