@@ -252,11 +252,13 @@ void CMFC3Dlg::OnBnClickedbtndelete()
 			CString numb = listctrl.GetItemText(nItem,0);
 			number = _ttoi(numb);
 			data.DeleteItem(dataList,number);
-			data.DataIntoList(dataList);
-			listctrl.DeleteAllItems();
-			Output(dataList);
+			
+	
 		}
+		data.DataIntoList(dataList);
 	}
+	listctrl.DeleteAllItems();
+	Output(dataList);
 }
 
 
