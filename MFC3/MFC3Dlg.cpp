@@ -114,20 +114,7 @@ BOOL CMFC3Dlg::OnInitDialog()
 	data.Open("C:\\DataBase\\first.db");
 	std::list<userData> dataList;
 	data.DataIntoList(dataList);
-	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
-	{
-		int itemCount=listctrl.GetItemCount();
-		std::wstring numberStr(std::to_wstring(it->number));
-		int nItem = listctrl.InsertItem(itemCount, numberStr.c_str());
-
-		CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
-
-		listctrl.SetItemText(nItem, 1, cvtStr);
-
-		std::wstring birthdayStr(std::to_wstring(it->birthday));
-
-		listctrl.SetItemText(nItem, 2, birthdayStr.c_str());
-	}
+	Output(dataList);
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -191,22 +178,7 @@ void CMFC3Dlg::OnBnClickedButton1()
 	std::string n(pszConvertedAnsiString);
 	std::list<userData> dataList;
 	data.bindName(dataList, n);
-	
-	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
-	{
-		int itemCount = listctrl.GetItemCount();
-		std::wstring numberStr(std::to_wstring(it->number));
-
-		int nItem = listctrl.InsertItem(itemCount, numberStr.c_str());
-
-		CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
-
-		listctrl.SetItemText(nItem, 1, cvtStr);
-
-		std::wstring birthdayStr(std::to_wstring(it->birthday));
-
-		listctrl.SetItemText(nItem, 2, birthdayStr.c_str());
-	}
+	Output(dataList);
 
 	}
 	catch (SQLException &ex) 
@@ -227,7 +199,6 @@ void CMFC3Dlg::OnLvnItemchangedList2(NMHDR *pNMHDR, LRESULT *pResult)
 void CMFC3Dlg::OnBnClickedbtninsert()
 {
 	UpdateData(TRUE);
-	try {
 	std::list<userData> dataList;
 	userData c;
 	CT2CA pszConvertedAnsiString(name);//Converting an MFC CString to a std::string
@@ -237,26 +208,7 @@ void CMFC3Dlg::OnBnClickedbtninsert()
 	c.number = _wtoi(Nnumber);
 	dataList.push_back(c);
 	data.insertData(dataList);
-	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
-	{
-		int itemCount = listctrl.GetItemCount();
-		std::wstring numberStr(std::to_wstring(it->number));
-		int nItem = listctrl.InsertItem(itemCount, numberStr.c_str());
-
-		CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
-
-		listctrl.SetItemText(nItem, 1, cvtStr);
-
-		std::wstring birthdayStr(std::to_wstring(it->birthday));
-
-		listctrl.SetItemText(nItem, 2, birthdayStr.c_str());
-	}
-
-	}
-	catch (SQLException &ex)
-	{
-		MessageBoxA(NULL, ex.what(), "error", MB_OK);
-	}
+	Output(dataList);
 	Nnumber = "";
 	name = "";
 	birthday = "";
@@ -268,20 +220,7 @@ void CMFC3Dlg::OnBnClickedbtnreset()
 	std::list<userData> dataList;
 	data.DataIntoList(dataList);
 	listctrl.DeleteAllItems();
-	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
-	{
-		int itemCount = listctrl.GetItemCount();
-		std::wstring numberStr(std::to_wstring(it->number));
-		int nItem = listctrl.InsertItem(itemCount, numberStr.c_str());
-
-		CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
-
-		listctrl.SetItemText(nItem, 1, cvtStr);
-
-		std::wstring birthdayStr(std::to_wstring(it->birthday));
-
-		listctrl.SetItemText(nItem, 2, birthdayStr.c_str());
-	}
+	Output(dataList);
 	name_f = "";
 	UpdateData(FALSE);
 }
@@ -299,7 +238,6 @@ void CMFC3Dlg::OnEnChangetxtname2()
 
 void CMFC3Dlg::OnBnClickedbtndelete()
 {
-	try{
 	std::list<userData> dataList;
 	POSITION pos = listctrl.GetFirstSelectedItemPosition();
 	if (pos == NULL)
@@ -315,27 +253,28 @@ void CMFC3Dlg::OnBnClickedbtndelete()
 			number = _ttoi(numb);
 			data.DeleteItem(dataList,number);
 			data.DataIntoList(dataList);
-			UpdateData(FALSE);
 			listctrl.DeleteAllItems();
-			for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
-			{
-				int itemCount = listctrl.GetItemCount();
-				std::wstring numberStr(std::to_wstring(it->number));
-				int nItem = listctrl.InsertItem(itemCount, numberStr.c_str());
-
-				CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
-
-				listctrl.SetItemText(nItem, 1, cvtStr);
-
-				std::wstring birthdayStr(std::to_wstring(it->birthday));
-
-				listctrl.SetItemText(nItem, 2, birthdayStr.c_str());
-			}
+			Output(dataList);
 		}
 	}
-	}
-	catch (SQLException &ex)
+}
+
+
+void CMFC3Dlg::Output(UserDataList & dataList)
+{
+	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
 	{
-		MessageBoxA(NULL, ex.what(), "error", MB_OK);
+		int itemCount = listctrl.GetItemCount();
+		std::wstring numberStr(std::to_wstring(it->number));
+		int nItem = listctrl.InsertItem(itemCount, numberStr.c_str());
+
+		CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
+
+		listctrl.SetItemText(nItem, 1, cvtStr);
+
+		std::wstring birthdayStr(std::to_wstring(it->birthday));
+
+		listctrl.SetItemText(nItem, 2, birthdayStr.c_str());
 	}
+	
 }
