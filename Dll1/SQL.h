@@ -6,6 +6,7 @@
 #include"userData.h"
 #include "sqlite3.h"
 
+
 class  __declspec(dllexport) SQL {
 private:
 	
@@ -24,5 +25,9 @@ public:
 	int DataIntoList(UserDataList& dataList);
 	int bindName(UserDataList& dataList, std::string name);
 	int selectData(UserDataList& dataList);
+	void beginTransaction();
+	void commitTransaction();
+	void rollback();
+
 	
 };

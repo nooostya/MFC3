@@ -7,7 +7,7 @@
 #include "fileOperations.h"
 #include "userData.h"
 #include <string>
-
+#include "Transaction.h"
 
 // CMFC3Dlg dialog
 class CMFC3Dlg : public CDialogEx
@@ -48,8 +48,9 @@ public:
 	CString name_f;
 	afx_msg void OnBnClickedbtnreset();
 	afx_msg void OnEnChangetxtname2();
-
 	afx_msg void OnBnClickedbtndelete();
 	void Output(UserDataList & dataList);
+	afx_msg void OnBnClickedbtnimport();
 	CString Nnumber;
+	afx_msg void OnBnClickedbtnexport();
 };

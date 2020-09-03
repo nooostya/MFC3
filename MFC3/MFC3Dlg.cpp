@@ -7,6 +7,7 @@
 #include "MFC3Dlg.h"
 #include "afxdialogex.h"
 #include <string>
+#include "pugixml.hpp"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -74,6 +75,8 @@ BEGIN_MESSAGE_MAP(CMFC3Dlg, CDialogEx)
 	ON_BN_CLICKED(btnReset, &CMFC3Dlg::OnBnClickedbtnreset)
 	ON_EN_CHANGE(txtName2, &CMFC3Dlg::OnEnChangetxtname2)
 	ON_BN_CLICKED(btnDelete, &CMFC3Dlg::OnBnClickedbtndelete)
+	ON_BN_CLICKED(btnImport, &CMFC3Dlg::OnBnClickedbtnimport)
+	ON_BN_CLICKED(btnExport, &CMFC3Dlg::OnBnClickedbtnexport)
 END_MESSAGE_MAP()
 
 
@@ -238,27 +241,32 @@ void CMFC3Dlg::OnEnChangetxtname2()
 
 void CMFC3Dlg::OnBnClickedbtndelete()
 {
-	std::list<userData> dataList;
-	POSITION pos = listctrl.GetFirstSelectedItemPosition();
-	if (pos == NULL)
-	{
-		MessageBox(NULL, L"No items were selected!");
-	}
-	else
-	{
-		while (pos)
+	try {
+		Transaction tr(data);
+		std::list<userData> dataList;
+		POSITION pos = listctrl.GetFirstSelectedItemPosition();
+		if (pos == NULL)
 		{
-			int nItem = listctrl.GetNextSelectedItem(pos);
-			CString numb = listctrl.GetItemText(nItem,0);
-			number = _ttoi(numb);
-			data.DeleteItem(dataList,number);
-			
-	
+			MessageBox(NULL, L"No items were selected!");
 		}
-		data.DataIntoList(dataList);
+		else
+		{
+			while (pos)
+			{
+				int nItem = listctrl.GetNextSelectedItem(pos);
+				CString numb = listctrl.GetItemText(nItem, 0);
+				number = _ttoi(numb);
+				data.DeleteItem(dataList, number);
+			}
+			data.DataIntoList(dataList);
+		}
+		listctrl.DeleteAllItems();
+		tr.commit();
+		Output(dataList);
 	}
-	listctrl.DeleteAllItems();
-	Output(dataList);
+	catch (SQLException &ex) {
+		MessageBoxA(NULL, ex.what(), "error", MB_OK);
+	}
 }
 
 
@@ -278,5 +286,55 @@ void CMFC3Dlg::Output(UserDataList & dataList)
 
 		listctrl.SetItemText(nItem, 2, birthdayStr.c_str());
 	}
+	
+}
+
+
+void CMFC3Dlg::OnBnClickedbtnimport()
+{
+	CFileDialog dlg(TRUE);
+	CString pathName;
+	CString fileName;
+	pugi::xml_document doc;
+	std::list<userData> dataList;
+
+
+	if (dlg.DoModal() == IDOK)
+	{
+		pathName = dlg.GetPathName();
+		fileName = dlg.GetFileName();
+		pugi::xml_parse_result result = doc.load_file(pathName);
+		if (result)
+		{
+			MessageBox(NULL, L"XML ok");
+			for (pugi::xml_node tool = doc.first_child(); tool; tool = tool.next_sibling())
+			{
+
+				for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute())
+				{
+					userData e;
+					e.name = attr.name();
+					e.birthday = atoi(attr.value());
+					dataList.push_back(e);
+				}
+			}
+			Output(dataList);
+			UpdateData(FALSE);
+		}
+		else {
+			MessageBoxA(NULL, result.description(), "RESULT", MB_OK);
+		}
+	}
+	else
+		MessageBox(NULL, L"DLG error");
+
+	
+}
+	
+
+
+void CMFC3Dlg::OnBnClickedbtnexport()
+{
+
 	
 }
