@@ -292,7 +292,8 @@ void CMFC3Dlg::Output(UserDataList & dataList)
 
 void CMFC3Dlg::OnBnClickedbtnimport()
 {
-	CFileDialog dlg(TRUE);
+	//CFileDialog dlg(TRUE);
+	CFileDialog dlg(TRUE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, L"XML Files (*.xml)|*.xml||", NULL, 0);
 	CString pathName;
 	CString fileName;
 	pugi::xml_document doc;
@@ -335,6 +336,18 @@ void CMFC3Dlg::OnBnClickedbtnimport()
 
 void CMFC3Dlg::OnBnClickedbtnexport()
 {
+	/*CFileDialog fileDialog(FALSE, "xml", "*.xml");
+	CString pathName;
+	CString fileName;
+	pugi::xml_document doc;
+	std::list<userData> dataList;
 
+
+	if (dlg.DoModal() == IDOK)
+	{
+		pathName = dlg.GetPathName();
+		fileName = dlg.GetFileName();
+		doc.save_file("save_file_output.xml");
+	}*/
 	
 }
