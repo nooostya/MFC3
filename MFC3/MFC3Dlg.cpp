@@ -292,10 +292,8 @@ void CMFC3Dlg::Output(UserDataList & dataList)
 
 void CMFC3Dlg::OnBnClickedbtnimport()
 {
-	//CFileDialog dlg(TRUE);
 	CFileDialog dlg(TRUE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, L"XML Files (*.xml)|*.xml||", NULL, 0);
 	CString pathName;
-	CString fileName;
 	pugi::xml_document doc;
 	std::list<userData> dataList;
 
@@ -303,22 +301,34 @@ void CMFC3Dlg::OnBnClickedbtnimport()
 	if (dlg.DoModal() == IDOK)
 	{
 		pathName = dlg.GetPathName();
-		fileName = dlg.GetFileName();
 		pugi::xml_parse_result result = doc.load_file(pathName);
 		if (result)
 		{
 			MessageBox(NULL, L"XML ok");
-			for (pugi::xml_node tool = doc.first_child(); tool; tool = tool.next_sibling())
-			{
+			pugi::xpath_query person_query("/data/person");
 
-				for (pugi::xml_attribute attr = tool.first_attribute(); attr; attr = attr.next_attribute())
-				{
+			pugi::xpath_query number_query("number/text()");
+			pugi::xpath_query name_query("name/text()");
+			pugi::xpath_query birthday_query("birthday/text()");
+
+			pugi::xpath_node_set xpath_people = doc.select_nodes(person_query);
+			for (pugi::xpath_node xpath_person : xpath_people)
+			{
+				pugi::xml_node person = xpath_person.node();
+
+				pugi::xml_node number = person.select_node(number_query).node();
+				pugi::xml_node name = person.select_node(name_query).node();
+				pugi::xml_node birthday = person.select_node(birthday_query).node();
+
+			
 					userData e;
-					e.name = attr.name();
-					e.birthday = atoi(attr.value());
+					e.number = atoi(number.value());
+					e.name = name.value();
+					e.birthday = atoi(birthday.value());
 					dataList.push_back(e);
-				}
+					
 			}
+			data.insertData(dataList);
 			Output(dataList);
 			UpdateData(FALSE);
 		}
@@ -336,18 +346,17 @@ void CMFC3Dlg::OnBnClickedbtnimport()
 
 void CMFC3Dlg::OnBnClickedbtnexport()
 {
-	/*CFileDialog fileDialog(FALSE, "xml", "*.xml");
 	CString pathName;
 	CString fileName;
+	CFileDialog dlg(FALSE);
+	CString pathName;
 	pugi::xml_document doc;
 	std::list<userData> dataList;
 
 
 	if (dlg.DoModal() == IDOK)
 	{
-		pathName = dlg.GetPathName();
-		fileName = dlg.GetFileName();
-		doc.save_file("save_file_output.xml");
-	}*/
-	
+		
+
+	}
 }
