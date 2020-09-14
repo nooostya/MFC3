@@ -346,17 +346,21 @@ void CMFC3Dlg::OnBnClickedbtnimport()
 
 void CMFC3Dlg::OnBnClickedbtnexport()
 {
-	CString pathName;
-	CString fileName;
-	CFileDialog dlg(FALSE);
-	CString pathName;
 	pugi::xml_document doc;
 	std::list<userData> dataList;
-
-
+	userData f;
+	data.DataIntoList(dataList);
+		doc.load_string("<person><number>1</number><name>aaa</name><birthday>111</birthday></person>");
+		pugi::xml_node person = doc.child("person");
+		person.child("number").text() = f.number;
+		person.child("name").text() = f.name;
+		person.child("birthday").text() = f.birthday;
+	CString pathName;
+	CFileDialog dlg(FALSE);
 	if (dlg.DoModal() == IDOK)
 	{
-		
-
+		MessageBoxA(NULL, person.child("name").text().get(), "RESULT", MB_OK);
+		pathName = dlg.GetPathName();
+		doc.save_file(pathName);
 	}
 }
