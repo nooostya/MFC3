@@ -341,22 +341,20 @@ void CMFC3Dlg::OnBnClickedbtnimport()
 
 	
 }
-	
 
 
 void CMFC3Dlg::OnBnClickedbtnexport()
 {
 	pugi::xml_document doc;
 	std::list<userData> dataList;
-	userData f;
+	userData a;
 	data.DataIntoList(dataList);
-		doc.load_string("<person><number>1</number><name>aaa</name><birthday>111</birthday></person>");
-		pugi::xml_node person = doc.child("person");
-		person.child("number").text() = f.number;
-		person.child("name").text() = f.name;
-		person.child("birthday").text() = f.birthday;
+		pugi::xml_node person = doc.append_child("person");
+		person.append_child("number").text()=a.number;
+		person.append_child("name").text()=a.name.c_str();
+		person.append_child("birthday").text()=a.birthday;
 	CString pathName;
-	CFileDialog dlg(FALSE);
+	CFileDialog dlg(FALSE, _T("xml"), _T("*.xml"));
 	if (dlg.DoModal() == IDOK)
 	{
 		MessageBoxA(NULL, person.child("name").text().get(), "RESULT", MB_OK);
