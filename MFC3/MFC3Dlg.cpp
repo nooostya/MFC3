@@ -294,6 +294,7 @@ void CMFC3Dlg::Output(UserDataList & dataList)
 void CMFC3Dlg::OnBnClickedbtnimport()
 {
 	try{
+	listctrl.DeleteAllItems();
 	CFileDialog dlg(TRUE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, L"XML Files (*.xml)|*.xml||", NULL, 0);
 	CString pathName;
 	pugi::xml_document doc;
@@ -352,22 +353,8 @@ void CMFC3Dlg::OnBnClickedbtnimport()
 			}
 			data.insertData(dataList);
 			data.insertData2(dataList2);
-
-
-
-			if (dataList.empty()) 
-			{
-				Output(dataList2);
-			}
-				if (dataList2.empty()) 
-				{
-					Output(dataList);
-				}
-					else
-					{
-						Output(dataList);
-						Output(dataList2);
-					}
+			Output(dataList);
+			Output(dataList2);
 
 
 			UpdateData(FALSE);
