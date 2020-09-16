@@ -24,10 +24,13 @@ public:
 	int DeleteItem(UserDataList & dataList, int number);
 	int DataIntoList(UserDataList& dataList);
 	int bindName(UserDataList& dataList, std::string name);
-	int selectData(UserDataList& dataList);
+	//int selectData(UserDataList& dataList);
 	void beginTransaction();
 	void commitTransaction();
 	void rollback();
+	int isexist(int number);
+
+	int insertData2(UserDataList & dataList);
 
 	
 };
