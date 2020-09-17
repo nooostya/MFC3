@@ -293,79 +293,12 @@ void CMFC3Dlg::Output(UserDataList & dataList)
 
 void CMFC3Dlg::OnBnClickedbtnimport()
 {
-	try{
-	listctrl.DeleteAllItems();
-	CFileDialog dlg(TRUE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, L"XML Files (*.xml)|*.xml||", NULL, 0);
-	CString pathName;
-	pugi::xml_document doc;
-	std::list<userData> dataList;
-
-
-	if (dlg.DoModal() == IDOK)
-	{
-		pathName = dlg.GetPathName();
-		pugi::xml_parse_result result = doc.load_file(pathName);
-		if (result)
-		{
-			pugi::xpath_query person_query("/data/person");
-
-			pugi::xpath_query number_query("number/text()");
-			pugi::xpath_query name_query("name/text()");
-			pugi::xpath_query birthday_query("birthday/text()");
-
-			pugi::xpath_node_set xpath_people = doc.select_nodes(person_query);
-
-			for (auto it=xpath_people.begin(); it!=xpath_people.end(); it++)
-			{
-				pugi::xml_node person = it->node();
-
-				pugi::xml_node number = person.select_node(number_query).node();
-				pugi::xml_node name = person.select_node(name_query).node();
-				pugi::xml_node birthday = person.select_node(birthday_query).node();
-
-			
-					userData e;
-					e.number = atoi(number.value());
-					e.name = name.value();
-					e.birthday = atoi(birthday.value());
-					dataList.push_back(e);
-					
-			}
-
-			std::list<userData> dataList2;
-
-			auto it = dataList.begin();
-
-			while (it != dataList.end())
-			{
-				if (data.isexist(it->number) != 0)
-				{
-					dataList2.push_back(*it);
-
-					auto toDelete = it;
-					++it;
-					dataList.erase(toDelete);
-				}
-				else
-				{
-					++it;
-				}
-			}
-			data.insertData(dataList);
-			data.insertData2(dataList2);
-			data.DataIntoList(dataList);
-			Output(dataList);
-			//Output(dataList2);
-
-
-			UpdateData(FALSE);
-		}
-		else {
-			MessageBoxA(NULL, result.description(), "RESULT", MB_OK);
-		}
-	}
-	else
-		MessageBox(NULL, L"DLG error");
+	try {
+		listctrl.DeleteAllItems();
+		std::list<userData> dataList;
+		std::list<userData> dataList2;
+		XMLParser(dataList);
+		DataSort(dataList, dataList2);
 	}
 	catch (SQLException &ex) {
 		MessageBoxA(NULL, ex.what(), "error", MB_OK);
@@ -396,4 +329,73 @@ void CMFC3Dlg::OnBnClickedbtnexport()
 		pathName = dlg.GetPathName();
 		doc.save_file(pathName);
 	}
+}
+void CMFC3Dlg::XMLParser(UserDataList & dataList) 
+{
+	CString pathName;
+	pugi::xml_document doc;
+	CFileDialog dlg(TRUE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, L"XML Files (*.xml)|*.xml||", NULL, 0);
+	if (dlg.DoModal() == IDOK)
+	{
+		pathName = dlg.GetPathName();
+		pugi::xml_parse_result result = doc.load_file(pathName);
+		if (result)
+		{
+			pugi::xpath_query person_query("/data/person");
+
+			pugi::xpath_query number_query("number/text()");
+			pugi::xpath_query name_query("name/text()");
+			pugi::xpath_query birthday_query("birthday/text()");
+
+			pugi::xpath_node_set xpath_people = doc.select_nodes(person_query);
+
+			for (auto it = xpath_people.begin(); it != xpath_people.end(); it++)
+			{
+				pugi::xml_node person = it->node();
+
+				pugi::xml_node number = person.select_node(number_query).node();
+				pugi::xml_node name = person.select_node(name_query).node();
+				pugi::xml_node birthday = person.select_node(birthday_query).node();
+
+
+				userData e;
+				e.number = atoi(number.value());
+				e.name = name.value();
+				e.birthday = atoi(birthday.value());
+				dataList.push_back(e);
+
+			}
+		}
+		else {
+			MessageBoxA(NULL, result.description(), "RESULT", MB_OK);
+		}
+	}
+	else
+		MessageBox(NULL, L"DLG error");
+}
+void CMFC3Dlg::DataSort(UserDataList & dataList, UserDataList & dataList2)
+{
+	auto it = dataList.begin();
+
+	while (it != dataList.end())
+	{
+		if (data.isexist(it->number) != 0)
+		{
+			dataList2.push_back(*it);
+
+			auto toDelete = it;
+			++it;
+			dataList.erase(toDelete);
+		}
+		else
+		{
+			++it;
+		}
+	}
+	data.insertData(dataList);
+	data.insertData2(dataList2);
+	data.DataIntoList(dataList);
+	Output(dataList);
+	//Output(dataList2);
+	UpdateData(FALSE);
 }

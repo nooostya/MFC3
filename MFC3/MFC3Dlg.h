@@ -46,6 +46,7 @@ public:
 	CString birthday;
 	CString name;
 	CString name_f;
+	CString pathName;
 	afx_msg void OnBnClickedbtnreset();
 	afx_msg void OnEnChangetxtname2();
 	afx_msg void OnBnClickedbtndelete();
@@ -53,4 +54,6 @@ public:
 	afx_msg void OnBnClickedbtnimport();
 	CString Nnumber;
 	afx_msg void OnBnClickedbtnexport();
+	void XMLParser(UserDataList & dataList);
+	void DataSort(UserDataList & dataList, UserDataList & dataList2);
 };
