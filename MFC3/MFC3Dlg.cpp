@@ -353,8 +353,9 @@ void CMFC3Dlg::OnBnClickedbtnimport()
 			}
 			data.insertData(dataList);
 			data.insertData2(dataList2);
+			data.DataIntoList(dataList);
 			Output(dataList);
-			Output(dataList2);
+			//Output(dataList2);
 
 
 			UpdateData(FALSE);
