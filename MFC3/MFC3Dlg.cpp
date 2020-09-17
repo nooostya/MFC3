@@ -7,7 +7,7 @@
 #include "MFC3Dlg.h"
 #include "afxdialogex.h"
 #include <string>
-#include "pugixml.hpp"
+#include "XmlSerialization.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -293,86 +293,59 @@ void CMFC3Dlg::Output(UserDataList & dataList)
 
 void CMFC3Dlg::OnBnClickedbtnimport()
 {
-	try {
-		listctrl.DeleteAllItems();
-		std::list<userData> dataList;
-		std::list<userData> dataList2;
-		XMLParser(dataList);
-		DataSort(dataList, dataList2);
+	try{
+	listctrl.DeleteAllItems();
+	std::list<userData> dataList;
+	std::list<userData> dataList2;
+	XMLImport(dataList);
+	DataSort(dataList, dataList2);
+
+	data.insertData(dataList);
+	data.insertData2(dataList2);
+
+	data.DataIntoList(dataList);
+	Output(dataList);
+	//Output(dataList2);
+	UpdateData(FALSE);
 	}
 	catch (SQLException &ex) {
 		MessageBoxA(NULL, ex.what(), "error", MB_OK);
 	}
-
 }
 
 
 void CMFC3Dlg::OnBnClickedbtnexport()
 {
-	pugi::xml_document doc;
-	std::list<userData> dataList;
-	data.DataIntoList(dataList);
-	pugi::xml_node data = doc.append_child("data");
-
-	for (auto it = dataList.begin(); it != dataList.end(); it++) {
-		pugi::xml_node person = data.append_child("person");
-		person.append_child("number").text() = it->number;
-		person.append_child("name").text() = it->name.c_str();
-		person.append_child("birthday").text() = it->birthday;
-	}
-
-
-	CString pathName;
 	CFileDialog dlg(FALSE, _T("xml"), _T("*.xml"));
 	if (dlg.DoModal() == IDOK)
 	{
-		pathName = dlg.GetPathName();
-		doc.save_file(pathName);
+		std::list<userData> dataList;
+		data.DataIntoList(dataList);
+
+		ToXml(dlg.GetPathName().GetString(), dataList);
+
 	}
+
 }
-void CMFC3Dlg::XMLParser(UserDataList & dataList) 
+
+void CMFC3Dlg::XMLImport(UserDataList & dataList) 
 {
-	CString pathName;
-	pugi::xml_document doc;
 	CFileDialog dlg(TRUE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, L"XML Files (*.xml)|*.xml||", NULL, 0);
 	if (dlg.DoModal() == IDOK)
 	{
-		pathName = dlg.GetPathName();
-		pugi::xml_parse_result result = doc.load_file(pathName);
-		if (result)
+		bool status = FromXml(dlg.GetPathName().GetString(), dataList);
+
+		if (!status)
 		{
-			pugi::xpath_query person_query("/data/person");
-
-			pugi::xpath_query number_query("number/text()");
-			pugi::xpath_query name_query("name/text()");
-			pugi::xpath_query birthday_query("birthday/text()");
-
-			pugi::xpath_node_set xpath_people = doc.select_nodes(person_query);
-
-			for (auto it = xpath_people.begin(); it != xpath_people.end(); it++)
-			{
-				pugi::xml_node person = it->node();
-
-				pugi::xml_node number = person.select_node(number_query).node();
-				pugi::xml_node name = person.select_node(name_query).node();
-				pugi::xml_node birthday = person.select_node(birthday_query).node();
-
-
-				userData e;
-				e.number = atoi(number.value());
-				e.name = name.value();
-				e.birthday = atoi(birthday.value());
-				dataList.push_back(e);
-
-			}
-		}
-		else {
-			MessageBoxA(NULL, result.description(), "RESULT", MB_OK);
+			MessageBoxA(NULL, "Failed to load xml", "RESULT", MB_OK);
 		}
 	}
 	else
+	{
 		MessageBox(NULL, L"DLG error");
+	}
 }
+
 void CMFC3Dlg::DataSort(UserDataList & dataList, UserDataList & dataList2)
 {
 	auto it = dataList.begin();
@@ -392,10 +365,5 @@ void CMFC3Dlg::DataSort(UserDataList & dataList, UserDataList & dataList2)
 			++it;
 		}
 	}
-	data.insertData(dataList);
-	data.insertData2(dataList2);
-	data.DataIntoList(dataList);
-	Output(dataList);
-	//Output(dataList2);
-	UpdateData(FALSE);
+
 }

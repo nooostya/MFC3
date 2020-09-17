@@ -54,6 +54,7 @@ public:
 	afx_msg void OnBnClickedbtnimport();
 	CString Nnumber;
 	afx_msg void OnBnClickedbtnexport();
-	void XMLParser(UserDataList & dataList);
+	void XMLImport(UserDataList & dataList);
 	void DataSort(UserDataList & dataList, UserDataList & dataList2);
+	
 };
