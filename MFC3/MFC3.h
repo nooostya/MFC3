@@ -15,7 +15,7 @@
 // See MFC3.cpp for the implementation of this class
 //
 
-class CMFC3App : public CWinApp
+class CMFC3App : public CBCGPWinApp
 {
 public:
 	CMFC3App();
@@ -24,6 +24,7 @@ public:
 public:
 	virtual BOOL InitInstance();
 
+	
 // Implementation
 
 	DECLARE_MESSAGE_MAP()

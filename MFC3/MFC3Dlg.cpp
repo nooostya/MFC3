@@ -8,6 +8,7 @@
 #include "afxdialogex.h"
 #include <string>
 #include "XmlSerialization.h"
+#include "pch.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -15,7 +16,7 @@
 
 // CAboutDlg dialog used for App About
 
-class CAboutDlg : public CDialogEx
+class CAboutDlg : public CBCGPDialog
 {
 public:
 	CAboutDlg();
@@ -24,7 +25,7 @@ public:
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_ABOUTBOX };
 #endif
-
+	CBCGPURLLinkButton m_btnURL;
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
@@ -32,21 +33,22 @@ public:
 protected:
 	DECLARE_MESSAGE_MAP()
 };
-BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
+BEGIN_MESSAGE_MAP(CAboutDlg, CBCGPDialog)
 END_MESSAGE_MAP()
-CAboutDlg::CAboutDlg() : CDialogEx(IDD_ABOUTBOX)
+CAboutDlg::CAboutDlg() : CBCGPDialog(IDD_ABOUTBOX)
 {
+	EnableVisualManagerStyle(TRUE, TRUE);
 }
 
 void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CBCGPDialog::DoDataExchange(pDX);
 }
 
 
 
 CMFC3Dlg::CMFC3Dlg(CWnd* pParent /*=nullptr*/)
-	: CDialogEx(IDD_MFC3_DIALOG, pParent)
+	: CBCGPDialog(IDD_MFC3_DIALOG, pParent)
 	, birthday(_T(""))
 	, name(_T(""))
 	, name_f(_T(""))
@@ -57,7 +59,7 @@ CMFC3Dlg::CMFC3Dlg(CWnd* pParent /*=nullptr*/)
 
 void CMFC3Dlg::DoDataExchange(CDataExchange* pDX)
 {
-	CDialogEx::DoDataExchange(pDX);
+	CBCGPDialog::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_LIST2, listctrl);
 	DDX_Text(pDX, txtBirthday, birthday);
 	DDX_Text(pDX, txtName, name);
@@ -65,7 +67,7 @@ void CMFC3Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, txtNumber2, Nnumber);
 }
 
-BEGIN_MESSAGE_MAP(CMFC3Dlg, CDialogEx)
+BEGIN_MESSAGE_MAP(CMFC3Dlg, CBCGPDialog)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
@@ -84,7 +86,7 @@ END_MESSAGE_MAP()
 
 BOOL CMFC3Dlg::OnInitDialog()
 {
-	CDialogEx::OnInitDialog();
+	CBCGPDialog::OnInitDialog();
 
 	// Add "About..." menu item to system menu.
 
@@ -131,7 +133,7 @@ void CMFC3Dlg::OnSysCommand(UINT nID, LPARAM lParam)
 	}
 	else
 	{
-		CDialogEx::OnSysCommand(nID, lParam);
+		CBCGPDialog::OnSysCommand(nID, lParam);
 	}
 }
 
@@ -160,7 +162,7 @@ void CMFC3Dlg::OnPaint()
 	}
 	else
 	{
-		CDialogEx::OnPaint();
+		CBCGPDialog::OnPaint();
 	}
 }
 

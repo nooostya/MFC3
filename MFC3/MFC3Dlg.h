@@ -8,9 +8,10 @@
 #include "userData.h"
 #include <string>
 #include "Transaction.h"
+#include "BCGCBProInc.h"
 
 // CMFC3Dlg dialog
-class CMFC3Dlg : public CDialogEx
+class CMFC3Dlg : public CBCGPDialog
 {
 // Construction
 public:
@@ -20,7 +21,7 @@ public:
 #ifdef AFX_DESIGN_TIME
 	enum { IDD = IDD_MFC3_DIALOG };
 #endif
-
+	CBCGPThemeSelectorComboBox	m_wndVisualTheme;
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 

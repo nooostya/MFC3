@@ -14,8 +14,8 @@
 
 // CMFC3App
 
-BEGIN_MESSAGE_MAP(CMFC3App, CWinApp)
-	ON_COMMAND(ID_HELP, &CWinApp::OnHelp)
+BEGIN_MESSAGE_MAP(CMFC3App, CBCGPWinApp)
+	ON_COMMAND(ID_HELP, CBCGPWinApp::OnHelp)
 END_MESSAGE_MAP()
 
 
@@ -27,6 +27,7 @@ CMFC3App::CMFC3App()
 	m_dwRestartManagerSupportFlags = AFX_RESTART_MANAGER_SUPPORT_RESTART;
 
 	// TODO: add construction code here,
+	SetVisualTheme(BCGP_VISUAL_THEME_VS_2019_DARK);
 	// Place all significant initialization in InitInstance
 }
 
@@ -43,24 +44,24 @@ BOOL CMFC3App::InitInstance()
 	// InitCommonControlsEx() is required on Windows XP if an application
 	// manifest specifies use of ComCtl32.dll version 6 or later to enable
 	// visual styles.  Otherwise, any window creation will fail.
-	INITCOMMONCONTROLSEX InitCtrls;
-	InitCtrls.dwSize = sizeof(InitCtrls);
-	// Set this to include all the common control classes you want to use
-	// in your application.
-	InitCtrls.dwICC = ICC_WIN95_CLASSES;
-	InitCommonControlsEx(&InitCtrls);
+	InitCommonControls();
 
-	CWinApp::InitInstance();
-
+	CBCGPWinApp::InitInstance();
+	// Initialize OLE libraries
+	if (!AfxOleInit())
+	{
+		AfxMessageBox(IDP_OLE_INIT_FAILED);
+		return FALSE;
+	}
 
 	AfxEnableControlContainer();
 
 	// Create the shell manager, in case the dialog contains
 	// any shell tree view or shell list view controls.
-	CShellManager *pShellManager = new CShellManager;
+	CBCGPShellManager *pShellManager = new CBCGPShellManager;
 
 	// Activate "Windows Native" visual manager for enabling themes in MFC controls
-	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerWindows));
+	CBCGPVisualManager::SetDefaultManager(RUNTIME_CLASS(CBCGPWinXPVisualManager));
 
 	// Standard initialization
 	// If you are not using these features and wish to reduce the size
@@ -69,7 +70,7 @@ BOOL CMFC3App::InitInstance()
 	// Change the registry key under which our settings are stored
 	// TODO: You should modify this string to be something appropriate
 	// such as the name of your company or organization
-	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
+	SetRegistryKey(_T("MyCompany\\MyProduct"));
 
 	CMFC3Dlg dlg;
 	m_pMainWnd = &dlg;
@@ -104,4 +105,6 @@ BOOL CMFC3App::InitInstance()
 	//  application, rather than start the application's message pump.
 	return FALSE;
 }
+
+
 
