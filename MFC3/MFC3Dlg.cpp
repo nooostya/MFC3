@@ -55,6 +55,7 @@ CMFC3Dlg::CMFC3Dlg(CWnd* pParent /*=nullptr*/)
 	, Nnumber(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
+	EnableVisualManagerStyle(TRUE, TRUE);
 }
 
 void CMFC3Dlg::DoDataExchange(CDataExchange* pDX)
