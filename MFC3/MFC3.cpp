@@ -58,10 +58,10 @@ BOOL CMFC3App::InitInstance()
 
 	// Create the shell manager, in case the dialog contains
 	// any shell tree view or shell list view controls.
-	CBCGPShellManager *pShellManager = new CBCGPShellManager;
+	//CBCGPShellManager *pShellManager = new CBCGPShellManager;
 
 	// Activate "Windows Native" visual manager for enabling themes in MFC controls
-	CBCGPVisualManager::SetDefaultManager(RUNTIME_CLASS(CBCGPWinXPVisualManager));
+	CBCGPVisualManager::SetDefaultManager(RUNTIME_CLASS(CBCGPVisualManagerCarbon));
 
 	// Standard initialization
 	// If you are not using these features and wish to reduce the size
@@ -92,10 +92,10 @@ BOOL CMFC3App::InitInstance()
 	}
 
 	// Delete the shell manager created above.
-	if (pShellManager != nullptr)
+	/*if (pShellManager != nullptr)
 	{
 		delete pShellManager;
-	}
+	}*/
 
 #if !defined(_AFXDLL) && !defined(_AFX_NO_MFC_CONTROLS_IN_DIALOGS)
 	ControlBarCleanUp();

@@ -38,7 +38,7 @@ protected:
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedButton1();
-	CListCtrl listctrl;
+	
 	SQL data;
 	int number;
 	fileOperations op;
@@ -58,4 +58,15 @@ public:
 	void XMLImport(UserDataList & dataList);
 	void DataSort(UserDataList & dataList, UserDataList & dataList2);
 	
+	CBCGPListCtrl listctrl;
+	/*CBCGPButton del;
+	CBCGPButton exp;
+	CBCGPButton imp;
+	CBCGPButton ins;
+	CBCGPButton res;
+	CBCGPButton btn1;
+	CBCGPEdit bir;
+	CBCGPEdit nam;
+	CBCGPEdit namf;
+	CBCGPEdit nnum;*/
 };

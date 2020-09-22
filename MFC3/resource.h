@@ -23,6 +23,8 @@
 #define btnImport                       1012
 #define btnImport2                      1013
 #define btnExport                       1013
+#define IDC_COMPANY_URL                 1014
+#define IDP_OLE_INIT_FAILED				1015
 
 // Next default values for new objects
 // 

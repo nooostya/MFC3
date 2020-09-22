@@ -65,6 +65,16 @@ void CMFC3Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, txtName, name);
 	DDX_Text(pDX, txtName2, name_f);
 	DDX_Text(pDX, txtNumber2, Nnumber);
+	/*DDX_Control(pDX, btnDelete, del);
+	DDX_Control(pDX, btnExport, exp);
+	DDX_Control(pDX, btnImport, imp);
+	DDX_Control(pDX, btnInsert, ins);
+	DDX_Control(pDX, btnReset, res);
+	DDX_Control(pDX, IDC_BUTTON1, btn1);
+	DDX_Control(pDX, txtBirthday, bir);
+	DDX_Control(pDX, txtName, nam);
+	DDX_Control(pDX, txtName2, namf);
+	DDX_Control(pDX, txtNumber2, nnum);*/
 }
 
 BEGIN_MESSAGE_MAP(CMFC3Dlg, CBCGPDialog)
