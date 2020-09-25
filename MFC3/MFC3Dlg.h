@@ -69,4 +69,6 @@ public:
 	CBCGPEdit nam;
 	CBCGPEdit namf;
 	CBCGPEdit nnum;*/
+	
+	CBCGPGridCtrl nGrid;
 };

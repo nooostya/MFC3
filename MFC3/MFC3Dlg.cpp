@@ -9,6 +9,7 @@
 #include <string>
 #include "XmlSerialization.h"
 #include "pch.h"
+//#include "Resourсe.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -76,6 +77,7 @@ void CMFC3Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, txtName, nam);
 	DDX_Control(pDX, txtName2, namf);
 	DDX_Control(pDX, txtNumber2, nnum);*/
+	DDX_Control(pDX, IDC_BUTTON1, nGrid);
 }
 
 BEGIN_MESSAGE_MAP(CMFC3Dlg, CBCGPDialog)
@@ -123,6 +125,7 @@ BOOL CMFC3Dlg::OnInitDialog()
 	//  when the application's main window is not a dialog
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
+	nGrid.CreateOnPlaceHolder(this, IDC_DATA, 0, WS_TABSTOP | WS_CHILD | WS_VISIBLE);
 
 	listctrl.InsertColumn(3, L"Name", LVCFMT_LEFT, 150);
 	listctrl.InsertColumn(2, L"Birthday", LVCFMT_LEFT, 100);

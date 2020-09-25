@@ -75,5 +75,7 @@
 #else
 #pragma comment(linker,"/manifestdependency:\"type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' processorArchitecture='*' publicKeyToken='6595b64144ccf1df' language='*'\"")
 #endif
-
+// When you are using pre-compiled headers, this source file is necessary for compilation to succeed.
 #endif //PCH_H
+
+
