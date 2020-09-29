@@ -1,14 +1,13 @@
 ﻿
 // MFC3Dlg.cpp : implementation file
 //
-#include "pch.h"
+//#include "pch.h"
 #include "framework.h"
 #include "MFC3.h"
 #include "MFC3Dlg.h"
 #include "afxdialogex.h"
 #include <string>
 #include "XmlSerialization.h"
-#include "pch.h"
 //#include "Resourсe.h"
 
 #ifdef _DEBUG
@@ -125,11 +124,11 @@ BOOL CMFC3Dlg::OnInitDialog()
 	//  when the application's main window is not a dialog
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
-	nGrid.CreateOnPlaceHolder(this, IDC_DATA, 0, WS_TABSTOP | WS_CHILD | WS_VISIBLE);
+	nGrid.CreateOnPlaceHolder(this, pictureGrid);
 
-	listctrl.InsertColumn(3, L"Name", LVCFMT_LEFT, 150);
-	listctrl.InsertColumn(2, L"Birthday", LVCFMT_LEFT, 100);
-	listctrl.InsertColumn(0, L"RowID", LVCFMT_LEFT, 100);
+	nGrid.InsertColumn(3, L"Name", LVCFMT_LEFT, 150);
+	nGrid.InsertColumn(2, L"Birthday", LVCFMT_LEFT, 100);
+	nGrid.InsertColumn(0, L"RowID", LVCFMT_LEFT, 100);
 	data.Open("C:\\DataBase\\first.db");
 	std::list<userData> dataList;
 	data.DataIntoList(dataList);
@@ -191,7 +190,7 @@ HCURSOR CMFC3Dlg::OnQueryDragIcon()
 void CMFC3Dlg::OnBnClickedButton1()
 {
 	UpdateData(TRUE);
-	listctrl.DeleteAllItems();
+	nGrid.DeleteAllColumns();//was listctrl.deleteallitems()
 	try{
 	CT2CA pszConvertedAnsiString(name_f);//Converting an MFC CString to a std::string
 	std::string n(pszConvertedAnsiString);
@@ -239,7 +238,7 @@ void CMFC3Dlg::OnBnClickedbtnreset()
 {
 	std::list<userData> dataList;
 	data.DataIntoList(dataList);
-	listctrl.DeleteAllItems();
+	nGrid.DeleteAllColumns();//listctrl.DeleteAllItems()
 	Output(dataList);
 	name_f = "";
 	UpdateData(FALSE);
@@ -261,25 +260,27 @@ void CMFC3Dlg::OnBnClickedbtndelete()
 	try {
 		Transaction tr(data);
 		std::list<userData> dataList;
-		POSITION pos = listctrl.GetFirstSelectedItemPosition();
-		if (pos == NULL)
-		{
-			MessageBox(NULL, L"Nothing selected!");
-		}
-		else
-		{
-			while (pos)
-			{
-				int nItem = listctrl.GetNextSelectedItem(pos);
-				CString numb = listctrl.GetItemText(nItem, 0);
-				number = _ttoi(numb);
-				data.DeleteItem(dataList, number);
-			}
-			data.DataIntoList(dataList);
-		}
-		listctrl.DeleteAllItems();
-		tr.commit();
-		Output(dataList);
+		nGrid.GetCurSelItem();
+		//CString numb = nGrid.GetCurSelItemID();
+		/*POSITION pos = listctrl.GetFirstSelectedItemPosition();*/
+		//if (nGrid.GetCurSelItem == NULL)
+		//{
+		//	MessageBox(NULL, L"Nothing selected!");
+		//}
+		//else
+		//{
+		//	while (nGrid.GetCurSelItem)
+		//	{
+		//		//int nItem = listctrl.GetNextSelectedItem(pos);//grid needs another method
+		//		//CString numb = listctrl.GetItemText(nItem, 0);//grid needs another method
+		//		//number = _ttoi(numb);
+		//		//data.DeleteItem(dataList, number);
+		//	}
+		//	data.DataIntoList(dataList);
+		//}
+		//nGrid.DeleteAllColumns();//listctrl.deleteallitems
+		//tr.commit();
+		//Output(dataList);
 	}
 	catch (SQLException &ex) {
 		MessageBoxA(NULL, ex.what(), "error", MB_OK);
@@ -291,17 +292,17 @@ void CMFC3Dlg::Output(UserDataList & dataList)
 {
 	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
 	{
-		int itemCount = listctrl.GetItemCount();
+		int itemCount = listctrl.GetItemCount();//grid needs another method
 		std::wstring numberStr(std::to_wstring(it->number));
-		int nItem = listctrl.InsertItem(itemCount, numberStr.c_str());
+		int nItem = listctrl.InsertItem(itemCount, numberStr.c_str());//grid needs another method
 
 		CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
 
-		listctrl.SetItemText(nItem, 1, cvtStr);
+		listctrl.SetItemText(nItem, 1, cvtStr);//grid needs another method
 
 		std::wstring birthdayStr(std::to_wstring(it->birthday));
 
-		listctrl.SetItemText(nItem, 2, birthdayStr.c_str());
+		listctrl.SetItemText(nItem, 2, birthdayStr.c_str());//grid needs another method
 	}
 	
 }
@@ -310,7 +311,7 @@ void CMFC3Dlg::Output(UserDataList & dataList)
 void CMFC3Dlg::OnBnClickedbtnimport()
 {
 	try{
-	listctrl.DeleteAllItems();
+	listctrl.DeleteAllItems();//grid needs another method
 	std::list<userData> dataList;
 	std::list<userData> dataList2;
 	XMLImport(dataList);

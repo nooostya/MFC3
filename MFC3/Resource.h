@@ -21,10 +21,8 @@
 #define stxtName2                       1010
 #define txtNumber2                      1011
 #define btnImport                       1012
-#define btnImport2                      1013
 #define btnExport                       1013
-#define IDC_COMPANY_URL                 1014
-#define IDC_DATA                        1014
+#define pictureGrid                     1014
 #define IDP_OLE_INIT_FAILED             1015
 
 // Next default values for new objects

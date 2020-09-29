@@ -18,10 +18,6 @@ void fileOperations::readData(UserDataList & dataList)
 		dataList.push_back(d);
 	}
 	f.close();
-}
-
-void fileOperations::inputData(UserDataList & dataList)
-{
 	while (true)
 	{
 		std::cout << "name: " << std::endl;
@@ -55,3 +51,4 @@ void fileOperations::inputData(UserDataList & dataList)
 
 	}
 }
+

@@ -94,11 +94,11 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_WINDOWS;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>$(SolutionDir)sqlite3;C:\Users\Настя\source\repos\MFC3\Dll1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dll1;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>C:\Users\Настя\source\repos\MFC3\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <Midl>
       <MkTypLibCompatible>false</MkTypLibCompatible>
@@ -189,11 +189,11 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\Dll1\pugixml.hpp" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MFC3.h" />
     <ClInclude Include="MFC3Dlg.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="pugixml.hpp" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="XmlSerialization.h" />
@@ -223,7 +223,7 @@
     <Image Include="res\MFC3.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Dll1\Dll1.vcxproj">
+    <ProjectReference Include="..\Dll1\Dll1.vcxproj">
       <Project>{58a814da-7329-4595-adb6-431a6950b99d}</Project>
     </ProjectReference>
   </ItemGroup>

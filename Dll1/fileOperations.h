@@ -9,6 +9,7 @@
 #include "SQLException.h"
 
 
+
 class  __declspec(dllexport) fileOperations{
 private:
 	typedef std::list<userData> UserDataList;
@@ -19,6 +20,5 @@ private:
 public:
 	fileOperations() {}
 	void readData(UserDataList& dataList);
-	void inputData(UserDataList& dataList);
 	~fileOperations() {}
 };

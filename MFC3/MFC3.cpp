@@ -2,7 +2,7 @@
 // MFC3.cpp : Defines the class behaviors for the application.
 //
 
-#include "pch.h"
+//#include "pch.h"
 #include "framework.h"
 #include "MFC3.h"
 #include "MFC3Dlg.h"

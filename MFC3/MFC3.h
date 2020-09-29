@@ -9,7 +9,7 @@
 #endif
 
 #include "resource.h"		// main symbols
-
+#include "pch.h"
 
 // CMFC3App:
 // See MFC3.cpp for the implementation of this class

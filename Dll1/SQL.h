@@ -3,9 +3,8 @@
 #include <iostream>
 #include <list>
 #include <string>
-#include"userData.h"
 #include "sqlite3.h"
-
+#include"userData.h"
 
 class  __declspec(dllexport) SQL {
 private:
@@ -21,14 +20,16 @@ public:
 	void createTable();
 	int createIndex();
 	void insertData(UserDataList& dataList);
-	int DeleteItem(UserDataList & dataList, int number);
 	int DataIntoList(UserDataList& dataList);
+	int DeleteItem(UserDataList & dataList, int number);
 	int bindName(UserDataList& dataList, std::string name);
+	//int selectData(UserDataList& dataList);
 	void beginTransaction();
 	void commitTransaction();
-	void rollback();
-	int isexist(int number);
-	int insertData2(UserDataList & dataList);
 
-	
+	void rollback();
+
+	int isexist(int number);
+
+	int insertData2(UserDataList & dataList);
 };
