@@ -58,7 +58,7 @@ public:
 	void XMLImport(UserDataList & dataList);
 	void DataSort(UserDataList & dataList, UserDataList & dataList2);
 	
-	CBCGPListCtrl listctrl;
+	//CBCGPListCtrl listctrl;
 	/*CBCGPButton del;
 	CBCGPButton exp;
 	CBCGPButton imp;

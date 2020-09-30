@@ -187,10 +187,10 @@ HCURSOR CMFC3Dlg::OnQueryDragIcon()
 }
 
 
-void CMFC3Dlg::OnBnClickedButton1()
+void CMFC3Dlg::OnBnClickedButton1()//filter by name button
 {
+	nGrid.RemoveAll();//was listctrl.deleteallitems()
 	UpdateData(TRUE);
-	nGrid.DeleteAllColumns();//was listctrl.deleteallitems()
 	try{
 	CT2CA pszConvertedAnsiString(name_f);//Converting an MFC CString to a std::string
 	std::string n(pszConvertedAnsiString);
@@ -238,7 +238,7 @@ void CMFC3Dlg::OnBnClickedbtnreset()
 {
 	std::list<userData> dataList;
 	data.DataIntoList(dataList);
-	nGrid.DeleteAllColumns();//listctrl.DeleteAllItems()
+	nGrid.RemoveAll();//listctrl.DeleteAllItems()
 	Output(dataList);
 	name_f = "";
 	UpdateData(FALSE);
@@ -260,7 +260,7 @@ void CMFC3Dlg::OnBnClickedbtndelete()
 	try {
 		Transaction tr(data);
 		std::list<userData> dataList;
-		nGrid.GetCurSelItem();
+		nGrid.Clear();
 		//CString numb = nGrid.GetCurSelItemID();
 		/*POSITION pos = listctrl.GetFirstSelectedItemPosition();*/
 		//if (nGrid.GetCurSelItem == NULL)
@@ -290,9 +290,11 @@ void CMFC3Dlg::OnBnClickedbtndelete()
 
 void CMFC3Dlg::Output(UserDataList & dataList)
 {
+	nGrid.RemoveAll();
+	const int nColumns = nGrid.GetColumnCount();
 	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
 	{
-		const int nColumns = nGrid.GetColumnCount();
+		
 		std::wstring numberStr(std::to_wstring(it->number));
 		std::wstring birthdayStr(std::to_wstring(it->birthday));
 		// Insert 10 rows:
@@ -301,32 +303,15 @@ void CMFC3Dlg::Output(UserDataList & dataList)
 			// Create new row:
 			CBCGPGridRow* pRow = nGrid.CreateRow(nColumns);
 			// Set each column data:
-			for (int nColumn = 0; nColumn < nColumns; nColumn++)
-			{
-				pRow->GetItem(nColumn)->SetValue(numberStr.c_str());
-				pRow->GetItem(nColumn)->SetValue(it->name.c_str());
-				pRow->GetItem(nColumn)->SetValue(birthdayStr.c_str());
-			}
+			
+				pRow->GetItem(0)->SetValue(numberStr.c_str());
+				pRow->GetItem(1)->SetValue(it->name.c_str());
+				pRow->GetItem(2)->SetValue(birthdayStr.c_str());
+			
 			// Add row to grid:
 			nGrid.AddRow(pRow, FALSE /* Don't recal. layout */);
 		//}
-		nGrid.AdjustLayout();
-		/*for (int i = 0; i == nGrid.GetTotalRowCount(TRUE); i++) {*/
-			//int itemCount = gRow.GetItemCount();// listctrl.GetItemCount()
-
-			//std::wstring numberStr(std::to_wstring(it->number));
-			//gItem.SetValue(numberStr.c_str());
-			//gRow.AddItem(&gItem);//listctrl.InsertItem
-
-			//CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
-
-			//listctrl.SetItemText(nItem, 1, cvtStr);//grid needs another method
-
-			//std::wstring birthdayStr(std::to_wstring(it->birthday));
-
-			//listctrl.SetItemText(nItem, 2, birthdayStr.c_str());//listctrl.InsertItem
-
-		
+		nGrid.AdjustLayout();	
 	}
 }
 
@@ -334,7 +319,7 @@ void CMFC3Dlg::Output(UserDataList & dataList)
 void CMFC3Dlg::OnBnClickedbtnimport()
 {
 	try{
-	listctrl.DeleteAllItems();//grid needs another method
+	nGrid.RemoveAll();//grid needs another method
 	std::list<userData> dataList;
 	std::list<userData> dataList2;
 	XMLImport(dataList);
