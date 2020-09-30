@@ -8,6 +8,7 @@
 #include "afxdialogex.h"
 #include <string>
 #include "XmlSerialization.h"
+#include "BCGCBProInc.h"
 //#include "Resourсe.h"
 
 #ifdef _DEBUG
@@ -61,7 +62,6 @@ CMFC3Dlg::CMFC3Dlg(CWnd* pParent /*=nullptr*/)
 void CMFC3Dlg::DoDataExchange(CDataExchange* pDX)
 {
 	CBCGPDialog::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_LIST2, listctrl);
 	DDX_Text(pDX, txtBirthday, birthday);
 	DDX_Text(pDX, txtName, name);
 	DDX_Text(pDX, txtName2, name_f);
@@ -76,7 +76,7 @@ void CMFC3Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, txtName, nam);
 	DDX_Control(pDX, txtName2, namf);
 	DDX_Control(pDX, txtNumber2, nnum);*/
-	DDX_Control(pDX, IDC_BUTTON1, nGrid);
+	//DDX_Control(pDX, IDC_BUTTON1, nGrid);
 }
 
 BEGIN_MESSAGE_MAP(CMFC3Dlg, CBCGPDialog)
@@ -125,10 +125,10 @@ BOOL CMFC3Dlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 	nGrid.CreateOnPlaceHolder(this, pictureGrid);
-
-	nGrid.InsertColumn(3, L"Name", LVCFMT_LEFT, 150);
-	nGrid.InsertColumn(2, L"Birthday", LVCFMT_LEFT, 100);
-	nGrid.InsertColumn(0, L"RowID", LVCFMT_LEFT, 100);
+	nGrid.InsertColumn(0, L"RowID", 100);
+	nGrid.InsertColumn(1, L"Name", 150);
+	nGrid.InsertColumn(2, L"Birthday",100);
+	
 	data.Open("C:\\DataBase\\first.db");
 	std::list<userData> dataList;
 	data.DataIntoList(dataList);
@@ -292,19 +292,42 @@ void CMFC3Dlg::Output(UserDataList & dataList)
 {
 	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
 	{
-		int itemCount = listctrl.GetItemCount();//grid needs another method
+		const int nColumns = nGrid.GetColumnCount();
 		std::wstring numberStr(std::to_wstring(it->number));
-		int nItem = listctrl.InsertItem(itemCount, numberStr.c_str());//grid needs another method
-
-		CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
-
-		listctrl.SetItemText(nItem, 1, cvtStr);//grid needs another method
-
 		std::wstring birthdayStr(std::to_wstring(it->birthday));
+		// Insert 10 rows:
+		/*for (int nRow = 0; nRow < 10; nRow++)
+		{*/
+			// Create new row:
+			CBCGPGridRow* pRow = nGrid.CreateRow(nColumns);
+			// Set each column data:
+			for (int nColumn = 0; nColumn < nColumns; nColumn++)
+			{
+				pRow->GetItem(nColumn)->SetValue(numberStr.c_str());
+				pRow->GetItem(nColumn)->SetValue(it->name.c_str());
+				pRow->GetItem(nColumn)->SetValue(birthdayStr.c_str());
+			}
+			// Add row to grid:
+			nGrid.AddRow(pRow, FALSE /* Don't recal. layout */);
+		//}
+		nGrid.AdjustLayout();
+		/*for (int i = 0; i == nGrid.GetTotalRowCount(TRUE); i++) {*/
+			//int itemCount = gRow.GetItemCount();// listctrl.GetItemCount()
 
-		listctrl.SetItemText(nItem, 2, birthdayStr.c_str());//grid needs another method
+			//std::wstring numberStr(std::to_wstring(it->number));
+			//gItem.SetValue(numberStr.c_str());
+			//gRow.AddItem(&gItem);//listctrl.InsertItem
+
+			//CA2W cvtStr(it->name.c_str());//Converting string to a Cstring
+
+			//listctrl.SetItemText(nItem, 1, cvtStr);//grid needs another method
+
+			//std::wstring birthdayStr(std::to_wstring(it->birthday));
+
+			//listctrl.SetItemText(nItem, 2, birthdayStr.c_str());//listctrl.InsertItem
+
+		
 	}
-	
 }
 
 

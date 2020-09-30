@@ -71,4 +71,5 @@ public:
 	CBCGPEdit nnum;*/
 	
 	CBCGPGridCtrl nGrid;
+
 };
