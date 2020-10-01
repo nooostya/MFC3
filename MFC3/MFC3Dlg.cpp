@@ -265,7 +265,9 @@ void CMFC3Dlg::OnBnClickedbtndelete()
 		std::list<userData> dataList;
 		//nGrid.GetCurSelItem();
 		auto a = nGrid.GetCurSel();
+		//nGrid.GetCurSelItem();
 		nGrid.DestroyRow(a);
+		
 		data.DataIntoList(dataList);
 		data.DeleteItem(dataList, number);
 		tr.commit();
