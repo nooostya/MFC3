@@ -264,14 +264,12 @@ void CMFC3Dlg::OnBnClickedbtndelete()
 		Transaction tr(data);
 		std::list<userData> dataList;
 		//nGrid.GetCurSelItem();
-		auto a = nGrid.GetCurSel();
-		//nGrid.GetCurSelItem();
-		nGrid.DestroyRow(a);
-		
-		data.DataIntoList(dataList);
+		CBCGPGridRow* pRow = nGrid.GetCurSel();
+		number = pRow->GetData();
 		data.DeleteItem(dataList, number);
+		data.DataIntoList(dataList);
 		tr.commit();
-		//nGrid.RemoveAll();
+		nGrid.RemoveAll();
 		Output(dataList);
 	}
 	catch (SQLException &ex) {
@@ -294,6 +292,7 @@ void CMFC3Dlg::Output(UserDataList & dataList)
 		pRow->GetItem(0)->SetValue(numberStr.c_str());
 		pRow->GetItem(1)->SetValue(it->name.c_str());
 		pRow->GetItem(2)->SetValue(birthdayStr.c_str());
+		pRow->SetData(it->number);
 			
 		nGrid.AddRow(pRow, FALSE);
 		
