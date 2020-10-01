@@ -25,7 +25,7 @@ void SQL::createTable()
 	std::string sql = "CREATE TABLE IF NOT EXISTS BIRTHDAYS("
 		"NUMBER INTEGER PRIMARY KEY,"
 		"NAME TEXT NOT NULL,"
-		"birthday INT NOT NULL)";
+		"BIRTHDAY INT NOT NULL)";
 
 	int rc = sqlite3_exec(db, sql.c_str(), NULL, 0, &messageError);
 	if (rc != SQLITE_OK) {
@@ -126,6 +126,7 @@ int SQL::bindName(UserDataList & dataList, std::string name)
 	sqlite3_bind_text(stmt, 1, name.c_str(), -1, SQLITE_TRANSIENT);
 	
 	int er=SQLITE_DONE;
+	//int er = sqlite3_step(stmt);
 	do 
 	{
 		er = sqlite3_step(stmt);

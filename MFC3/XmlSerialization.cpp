@@ -17,7 +17,7 @@ bool ToXml(const std::wstring& filePath, std::list<userData>& dataList)
 	}
 
 	doc.save_file(filePath.c_str());
-	if (doc.save_file(filePath.c_str())) {
+	if (!doc.save_file(filePath.c_str())) {
 		throw SQLException("save file error");
 		return false;
 	}

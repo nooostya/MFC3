@@ -124,6 +124,7 @@ BOOL CMFC3Dlg::OnInitDialog()
 	//  when the application's main window is not a dialog
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
+	
 	nGrid.CreateOnPlaceHolder(this, pictureGrid);
 	nGrid.InsertColumn(0, L"RowID", 100);
 	nGrid.InsertColumn(1, L"Name", 150);
@@ -189,15 +190,17 @@ HCURSOR CMFC3Dlg::OnQueryDragIcon()
 
 void CMFC3Dlg::OnBnClickedButton1()//filter by name button
 {
-	nGrid.RemoveAll();//was listctrl.deleteallitems()
-	UpdateData(TRUE);
+	
+	UpdateData(TRUE); 
+	nGrid.RemoveAll();	
 	try{
-	CT2CA pszConvertedAnsiString(name_f);//Converting an MFC CString to a std::string
-	std::string n(pszConvertedAnsiString);
-	std::list<userData> dataList;
-	data.bindName(dataList, n);
-	Output(dataList);
-
+		CT2CA pszConvertedAnsiString(name_f);//Converting an MFC CString to a std::string
+		std::string n(pszConvertedAnsiString);
+		std::list<userData> dataList;
+		
+		data.bindName(dataList, n);
+	
+		Output(dataList);
 	}
 	catch (SQLException &ex) 
 	{
@@ -238,7 +241,7 @@ void CMFC3Dlg::OnBnClickedbtnreset()
 {
 	std::list<userData> dataList;
 	data.DataIntoList(dataList);
-	nGrid.RemoveAll();//listctrl.DeleteAllItems()
+	nGrid.RemoveAll();
 	Output(dataList);
 	name_f = "";
 	UpdateData(FALSE);
@@ -260,27 +263,14 @@ void CMFC3Dlg::OnBnClickedbtndelete()
 	try {
 		Transaction tr(data);
 		std::list<userData> dataList;
-		nGrid.Clear();
-		//CString numb = nGrid.GetCurSelItemID();
-		/*POSITION pos = listctrl.GetFirstSelectedItemPosition();*/
-		//if (nGrid.GetCurSelItem == NULL)
-		//{
-		//	MessageBox(NULL, L"Nothing selected!");
-		//}
-		//else
-		//{
-		//	while (nGrid.GetCurSelItem)
-		//	{
-		//		//int nItem = listctrl.GetNextSelectedItem(pos);//grid needs another method
-		//		//CString numb = listctrl.GetItemText(nItem, 0);//grid needs another method
-		//		//number = _ttoi(numb);
-		//		//data.DeleteItem(dataList, number);
-		//	}
-		//	data.DataIntoList(dataList);
-		//}
-		//nGrid.DeleteAllColumns();//listctrl.deleteallitems
-		//tr.commit();
-		//Output(dataList);
+		//nGrid.GetCurSelItem();
+		auto a = nGrid.GetCurSel();
+		nGrid.DestroyRow(a);
+		data.DataIntoList(dataList);
+		data.DeleteItem(dataList, number);
+		tr.commit();
+		//nGrid.RemoveAll();
+		Output(dataList);
 	}
 	catch (SQLException &ex) {
 		MessageBoxA(NULL, ex.what(), "error", MB_OK);
@@ -290,29 +280,23 @@ void CMFC3Dlg::OnBnClickedbtndelete()
 
 void CMFC3Dlg::Output(UserDataList & dataList)
 {
-	nGrid.RemoveAll();
 	const int nColumns = nGrid.GetColumnCount();
-	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)//datalist output into listctrl
+	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)
 	{
 		
 		std::wstring numberStr(std::to_wstring(it->number));
 		std::wstring birthdayStr(std::to_wstring(it->birthday));
-		// Insert 10 rows:
-		/*for (int nRow = 0; nRow < 10; nRow++)
-		{*/
-			// Create new row:
-			CBCGPGridRow* pRow = nGrid.CreateRow(nColumns);
-			// Set each column data:
+		
+		CBCGPGridRow* pRow = nGrid.CreateRow(nColumns);
 			
-				pRow->GetItem(0)->SetValue(numberStr.c_str());
-				pRow->GetItem(1)->SetValue(it->name.c_str());
-				pRow->GetItem(2)->SetValue(birthdayStr.c_str());
+		pRow->GetItem(0)->SetValue(numberStr.c_str());
+		pRow->GetItem(1)->SetValue(it->name.c_str());
+		pRow->GetItem(2)->SetValue(birthdayStr.c_str());
 			
-			// Add row to grid:
-			nGrid.AddRow(pRow, FALSE /* Don't recal. layout */);
-		//}
-		nGrid.AdjustLayout();	
+		nGrid.AddRow(pRow, FALSE);
+		
 	}
+	nGrid.AdjustLayout();
 }
 
 
