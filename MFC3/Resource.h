@@ -25,7 +25,6 @@
 #define btnExport                       1013
 #define pictureGrid                     1014
 #define IDP_OLE_INIT_FAILED             1015
-#define IDC_BUTTON2                     1015
 
 // Next default values for new objects
 // 

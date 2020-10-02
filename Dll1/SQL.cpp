@@ -153,6 +153,31 @@ void SQL::beginTransaction() {
 void SQL::commitTransaction() {
 	sqlite3_exec(db, "COMMIT TRANSACTION;", NULL, NULL, NULL);
 }
+int SQL::UpdateData(UserDataList & dataList)
+{
+
+	sqlite3_stmt *stmt;
+	const char *sql = "UPDATE Birthdays SET name = ?, birthday = ? WHERE number = ? ";
+	int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
+	if (rc != SQLITE_OK)
+	{
+		throw SQLException("update error", rc);
+	}
+
+	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)
+	{
+		sqlite3_bind_int(stmt, 1, it->number);
+		sqlite3_bind_text(stmt, 2, it->name.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int(stmt, 3, it->birthday);
+		rc = sqlite3_step(stmt);
+		if (rc != SQLITE_DONE)
+		{
+			throw SQLException("bind error", rc);
+		}
+		sqlite3_reset(stmt);
+	}
+	sqlite3_finalize(stmt);
+}
 void SQL::rollback() {
 	sqlite3_exec(db, "ROLLBACK TRANSACTION;", NULL, NULL, NULL);
 }

@@ -46,8 +46,6 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 	CBCGPDialog::DoDataExchange(pDX);
 }
 
-
-
 CMFC3Dlg::CMFC3Dlg(CWnd* pParent /*=nullptr*/)
 	: CBCGPDialog(IDD_MFC3_DIALOG, pParent)
 	, birthday(_T(""))
@@ -66,17 +64,6 @@ void CMFC3Dlg::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, txtName, name);
 	DDX_Text(pDX, txtName2, name_f);
 	DDX_Text(pDX, txtNumber2, Nnumber);
-	/*DDX_Control(pDX, btnDelete, del);
-	DDX_Control(pDX, btnExport, exp);
-	DDX_Control(pDX, btnImport, imp);
-	DDX_Control(pDX, btnInsert, ins);
-	DDX_Control(pDX, btnReset, res);
-	DDX_Control(pDX, IDC_BUTTON1, btn1);
-	DDX_Control(pDX, txtBirthday, bir);
-	DDX_Control(pDX, txtName, nam);
-	DDX_Control(pDX, txtName2, namf);
-	DDX_Control(pDX, txtNumber2, nnum);*/
-	//DDX_Control(pDX, IDC_BUTTON1, nGrid);
 }
 
 BEGIN_MESSAGE_MAP(CMFC3Dlg, CBCGPDialog)
@@ -84,10 +71,8 @@ BEGIN_MESSAGE_MAP(CMFC3Dlg, CBCGPDialog)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON1, &CMFC3Dlg::OnBnClickedButton1)
-	ON_NOTIFY(LVN_ITEMCHANGED, IDC_LIST2, &CMFC3Dlg::OnLvnItemchangedList2)
 	ON_BN_CLICKED(btnInsert, &CMFC3Dlg::OnBnClickedbtninsert)
 	ON_BN_CLICKED(btnReset, &CMFC3Dlg::OnBnClickedbtnreset)
-	ON_EN_CHANGE(txtName2, &CMFC3Dlg::OnEnChangetxtname2)
 	ON_BN_CLICKED(btnDelete, &CMFC3Dlg::OnBnClickedbtndelete)
 	ON_BN_CLICKED(btnImport, &CMFC3Dlg::OnBnClickedbtnimport)
 	ON_BN_CLICKED(btnExport, &CMFC3Dlg::OnBnClickedbtnexport)
@@ -209,14 +194,6 @@ void CMFC3Dlg::OnBnClickedButton1()//filter by name button
 }
 
 
-void CMFC3Dlg::OnLvnItemchangedList2(NMHDR *pNMHDR, LRESULT *pResult)
-{
-	LPNMLISTVIEW pNMLV = reinterpret_cast<LPNMLISTVIEW>(pNMHDR);
-	// TODO: Add your control notification handler code here
-	*pResult = 0;
-}
-
-
 void CMFC3Dlg::OnBnClickedbtninsert()
 {
 	UpdateData(TRUE);
@@ -245,17 +222,6 @@ void CMFC3Dlg::OnBnClickedbtnreset()
 	Output(dataList);
 	name_f = "";
 	UpdateData(FALSE);
-}
-
-
-void CMFC3Dlg::OnEnChangetxtname2()
-{
-	// TODO:  If this is a RICHEDIT control, the control will not
-	// send this notification unless you override the CDialogEx::OnInitDialog()
-	// function and call CRichEditCtrl().SetEventMask()
-	// with the ENM_CHANGE flag ORed into the mask.
-
-	// TODO:  Add your control notification handler code here
 }
 
 void CMFC3Dlg::OnBnClickedbtndelete()
@@ -378,3 +344,5 @@ void CMFC3Dlg::DataSort(UserDataList & dataList, UserDataList & dataList2)
 	}
 
 }
+
+

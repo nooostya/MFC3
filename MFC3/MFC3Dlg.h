@@ -10,6 +10,18 @@
 #include "Transaction.h"
 #include "BCGCBProInc.h"
 
+class MyGridControl : public CBCGPGridCtrl
+{
+public:
+	SQL data;
+	void OnItemChanged(CBCGPGridItem *  pItem, int nRow, int nColumn) override
+	{
+		MessageBoxA(NULL, "Item changed", "RESULT", MB_OK);
+
+		data.
+	}
+};
+
 // CMFC3Dlg dialog
 class CMFC3Dlg : public CBCGPDialog
 {
@@ -39,17 +51,14 @@ protected:
 public:
 	afx_msg void OnBnClickedButton1();
 	
-	SQL data;
-	int number;
+	int number = 0;
 	fileOperations op;
-	afx_msg void OnLvnItemchangedList2(NMHDR *pNMHDR, LRESULT *pResult);
 	afx_msg void OnBnClickedbtninsert();
 	CString birthday;
 	CString name;
 	CString name_f;
 	CString pathName;
 	afx_msg void OnBnClickedbtnreset();
-	afx_msg void OnEnChangetxtname2();
 	afx_msg void OnBnClickedbtndelete();
 	void Output(UserDataList & dataList);
 	afx_msg void OnBnClickedbtnimport();
@@ -57,19 +66,5 @@ public:
 	afx_msg void OnBnClickedbtnexport();
 	void XMLImport(UserDataList & dataList);
 	void DataSort(UserDataList & dataList, UserDataList & dataList2);
-	
-	//CBCGPListCtrl listctrl;
-	/*CBCGPButton del;
-	CBCGPButton exp;
-	CBCGPButton imp;
-	CBCGPButton ins;
-	CBCGPButton res;
-	CBCGPButton btn1;
-	CBCGPEdit bir;
-	CBCGPEdit nam;
-	CBCGPEdit namf;
-	CBCGPEdit nnum;*/
-	
-	CBCGPGridCtrl nGrid;
-
+	MyGridControl nGrid;
 };
