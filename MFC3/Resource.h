@@ -13,6 +13,7 @@
 #define IDC_BUTTON1                     1002
 #define stxtBirthday                    1003
 #define IDC_LIST2                       1004
+#define btnSave                         1004
 #define btnInsert                       1005
 #define txtName2                        1006
 #define grbInsert                       1007
@@ -24,6 +25,7 @@
 #define btnExport                       1013
 #define pictureGrid                     1014
 #define IDP_OLE_INIT_FAILED             1015
+#define IDC_BUTTON2                     1015
 
 // Next default values for new objects
 // 
@@ -31,7 +33,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        130
 #define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1015
+#define _APS_NEXT_CONTROL_VALUE         1016
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -290,6 +290,7 @@ void CMFC3Dlg::Output(UserDataList & dataList)
 		CBCGPGridRow* pRow = nGrid.CreateRow(nColumns);
 			
 		pRow->GetItem(0)->SetValue(numberStr.c_str());
+		pRow->GetItem(0)->SetReadOnly(TRUE);
 		pRow->GetItem(1)->SetValue(it->name.c_str());
 		pRow->GetItem(2)->SetValue(birthdayStr.c_str());
 		pRow->SetData(it->number);
