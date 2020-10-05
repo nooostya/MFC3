@@ -273,7 +273,7 @@ void CMFC3Dlg::Output(UserDataList & dataList)
 void CMFC3Dlg::OnBnClickedbtnimport()
 {
 	try{
-	nGrid.RemoveAll();//grid needs another method
+	nGrid.RemoveAll();
 	std::list<userData> dataList;
 	std::list<userData> dataList2;
 	XMLImport(dataList);
@@ -350,14 +350,18 @@ void CMFC3Dlg::DataSort(UserDataList & dataList, UserDataList & dataList2)
 void CMFC3Dlg::OnGridItemChanged(CBCGPGridItem * pItem, int nRow, int nColumn)
 {
 	try {
-		Transaction tr(data);
 		std::list<userData> dataList;
-		//nGrid.GetCurSelItem();
 		CBCGPGridRow* pRow = nGrid.GetCurSel();
 		number = pRow->GetData();
-		data.UpdateData(dataList, number);
-		data.DataIntoList(dataList);
-		tr.commit();
+		pRow->GetItem(1);
+
+		name = pItem->GetValue();
+
+		CT2CA pszConvertedAnsiString(name);
+		std::string n(pszConvertedAnsiString);
+
+		data.UpdateData(number, n);
+
 		nGrid.RemoveAll();
 		Output(dataList);
 	}

@@ -26,7 +26,7 @@ public:
 	//int selectData(UserDataList& dataList);
 	void beginTransaction();
 	void commitTransaction();
-	int UpdateData(UserDataList& dataList, int number);
+	int UpdateData(int number, std::string name);
 	void rollback();
 
 	int isexist(int number);

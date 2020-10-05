@@ -153,30 +153,26 @@ void SQL::beginTransaction() {
 void SQL::commitTransaction() {
 	sqlite3_exec(db, "COMMIT TRANSACTION;", NULL, NULL, NULL);
 }
-int SQL::UpdateData(UserDataList & dataList, int number)
+int SQL::UpdateData(int number, std::string name)
 {
 
 	sqlite3_stmt *stmt;
-	const char *sql = "UPDATE Birthdays SET name = ?, birthday = ? WHERE number = ? ";
+	const char *sql = "UPDATE Birthdays SET name = ? WHERE number = ? ";
 	int rc = sqlite3_prepare_v2(db, sql, -1, &stmt, NULL);
 	if (rc != SQLITE_OK)
 	{
 		throw SQLException("update error", rc);
 	}
 
-	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)
-	{
-		
-		sqlite3_bind_text(stmt, 1, it->name.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int(stmt, 2, it->birthday);
-		sqlite3_bind_int(stmt, 3, it->number);
+		sqlite3_bind_text(stmt, 1, name.c_str(), -1, SQLITE_TRANSIENT);
+		//sqlite3_bind_int(stmt, 2, it->birthday);
+		sqlite3_bind_int(stmt, 2, number);
 		rc = sqlite3_step(stmt);
 		if (rc != SQLITE_DONE)
 		{
 			throw SQLException("bind error", rc);
 		}
 		sqlite3_reset(stmt);
-	}
 	sqlite3_finalize(stmt);
 }
 void SQL::rollback() {
