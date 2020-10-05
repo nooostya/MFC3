@@ -19,7 +19,9 @@ public:
 class MyGridControl : public CBCGPGridCtrl
 {
 public:
-
+	MyGridControl() {
+		m_listener = 0;
+	}
 	void SetListener(GridListener* listener)
 	{
 		m_listener = listener;
@@ -27,9 +29,10 @@ public:
 
 	void OnItemChanged(CBCGPGridItem *  pItem, int nRow, int nColumn) override
 	{
+		if (m_listener!=0){
 		m_listener->OnGridItemChanged(pItem, nRow, nColumn);
+		}
 	}
-
 private:
 	GridListener* m_listener;
 };

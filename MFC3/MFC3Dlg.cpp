@@ -353,7 +353,6 @@ void CMFC3Dlg::OnGridItemChanged(CBCGPGridItem * pItem, int nRow, int nColumn)
 		std::list<userData> dataList;
 		CBCGPGridRow* pRow = nGrid.GetCurSel();
 		number = pRow->GetData();
-		pRow->GetItem(1);
 
 		name = pItem->GetValue();
 
@@ -361,9 +360,6 @@ void CMFC3Dlg::OnGridItemChanged(CBCGPGridItem * pItem, int nRow, int nColumn)
 		std::string n(pszConvertedAnsiString);
 
 		data.UpdateData(number, n);
-
-		nGrid.RemoveAll();
-		Output(dataList);
 	}
 	catch (SQLException &ex) {
 		MessageBoxA(NULL, ex.what(), "error", MB_OK);
