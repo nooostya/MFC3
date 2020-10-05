@@ -27,6 +27,7 @@ public:
 	void beginTransaction();
 	void commitTransaction();
 	int UpdateData(int number, std::string name);
+	int UpdateData2(int number, int birthday);
 	void rollback();
 
 	int isexist(int number);

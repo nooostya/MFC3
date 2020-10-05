@@ -352,14 +352,19 @@ void CMFC3Dlg::OnGridItemChanged(CBCGPGridItem * pItem, int nRow, int nColumn)
 	try {
 		std::list<userData> dataList;
 		CBCGPGridRow* pRow = nGrid.GetCurSel();
-		number = pRow->GetData();
-
-		name = pItem->GetValue();
-
-		CT2CA pszConvertedAnsiString(name);
+		auto variable = pRow->GetData();
+		CT2CA pszConvertedAnsiString(name);//Converting an MFC CString to a std::string
 		std::string n(pszConvertedAnsiString);
+		int b = _wtoi(birthday);
+		if(typeid(variable) == typeid(int))
+		{
+			data.UpdateData2(number, b);
+		}
+		else
+			data.UpdateData(number, n);
+		
 
-		data.UpdateData(number, n);
+		
 	}
 	catch (SQLException &ex) {
 		MessageBoxA(NULL, ex.what(), "error", MB_OK);
