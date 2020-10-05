@@ -110,6 +110,8 @@ BOOL CMFC3Dlg::OnInitDialog()
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 	
+	nGrid.SetListener(this);
+
 	nGrid.CreateOnPlaceHolder(this, pictureGrid);
 	nGrid.InsertColumn(0, L"RowID", 100);
 	nGrid.InsertColumn(1, L"Name", 150);
@@ -345,4 +347,21 @@ void CMFC3Dlg::DataSort(UserDataList & dataList, UserDataList & dataList2)
 
 }
 
-
+void CMFC3Dlg::OnGridItemChanged(CBCGPGridItem * pItem, int nRow, int nColumn)
+{
+	try {
+		Transaction tr(data);
+		std::list<userData> dataList;
+		//nGrid.GetCurSelItem();
+		CBCGPGridRow* pRow = nGrid.GetCurSel();
+		number = pRow->GetData();
+		data.UpdateData(dataList, number);
+		data.DataIntoList(dataList);
+		tr.commit();
+		nGrid.RemoveAll();
+		Output(dataList);
+	}
+	catch (SQLException &ex) {
+		MessageBoxA(NULL, ex.what(), "error", MB_OK);
+	}
+}

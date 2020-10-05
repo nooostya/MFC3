@@ -153,7 +153,7 @@ void SQL::beginTransaction() {
 void SQL::commitTransaction() {
 	sqlite3_exec(db, "COMMIT TRANSACTION;", NULL, NULL, NULL);
 }
-int SQL::UpdateData(UserDataList & dataList)
+int SQL::UpdateData(UserDataList & dataList, int number)
 {
 
 	sqlite3_stmt *stmt;
@@ -166,9 +166,10 @@ int SQL::UpdateData(UserDataList & dataList)
 
 	for (UserDataList::iterator it = dataList.begin(); it != dataList.end(); it++)
 	{
-		sqlite3_bind_int(stmt, 1, it->number);
-		sqlite3_bind_text(stmt, 2, it->name.c_str(), -1, SQLITE_TRANSIENT);
-		sqlite3_bind_int(stmt, 3, it->birthday);
+		
+		sqlite3_bind_text(stmt, 1, it->name.c_str(), -1, SQLITE_TRANSIENT);
+		sqlite3_bind_int(stmt, 2, it->birthday);
+		sqlite3_bind_int(stmt, 3, it->number);
 		rc = sqlite3_step(stmt);
 		if (rc != SQLITE_DONE)
 		{

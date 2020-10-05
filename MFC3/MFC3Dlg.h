@@ -10,20 +10,32 @@
 #include "Transaction.h"
 #include "BCGCBProInc.h"
 
+class GridListener
+{
+public:
+	virtual void OnGridItemChanged(CBCGPGridItem *  pItem, int nRow, int nColumn) = 0;
+};
+
 class MyGridControl : public CBCGPGridCtrl
 {
 public:
-	SQL data;
+
+	void SetListener(GridListener* listener)
+	{
+		m_listener = listener;
+	}
+
 	void OnItemChanged(CBCGPGridItem *  pItem, int nRow, int nColumn) override
 	{
-		MessageBoxA(NULL, "Item changed", "RESULT", MB_OK);
-
-		data.
+		m_listener->OnGridItemChanged(pItem, nRow, nColumn);
 	}
+
+private:
+	GridListener* m_listener;
 };
 
 // CMFC3Dlg dialog
-class CMFC3Dlg : public CBCGPDialog
+class CMFC3Dlg : public CBCGPDialog, public GridListener
 {
 // Construction
 public:
@@ -66,5 +78,9 @@ public:
 	afx_msg void OnBnClickedbtnexport();
 	void XMLImport(UserDataList & dataList);
 	void DataSort(UserDataList & dataList, UserDataList & dataList2);
+
+	virtual void OnGridItemChanged(CBCGPGridItem *  pItem, int nRow, int nColumn) override;
+
 	MyGridControl nGrid;
+	SQL data;
 };
