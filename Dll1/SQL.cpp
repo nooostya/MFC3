@@ -185,7 +185,7 @@ int SQL::UpdateData2(int number, int birthday)
 		throw SQLException("update error", rc);
 	}
 
-	sqlite3_bind_text(stmt, 1, birthday.c_str(), -1, SQLITE_TRANSIENT);
+	sqlite3_bind_int(stmt, 1, birthday);
 	sqlite3_bind_int(stmt, 2, number);
 	rc = sqlite3_step(stmt);
 	if (rc != SQLITE_DONE)

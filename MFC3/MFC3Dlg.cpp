@@ -350,20 +350,22 @@ void CMFC3Dlg::DataSort(UserDataList & dataList, UserDataList & dataList2)
 void CMFC3Dlg::OnGridItemChanged(CBCGPGridItem * pItem, int nRow, int nColumn)
 {
 	try {
-		std::list<userData> dataList;
 		CBCGPGridRow* pRow = nGrid.GetCurSel();
-		auto variable = pRow->GetData();
-		CT2CA pszConvertedAnsiString(name);//Converting an MFC CString to a std::string
-		std::string n(pszConvertedAnsiString);
-		int b = _wtoi(birthday);
-		if(typeid(variable) == typeid(int))
-		{
+		number = pRow->GetData();
+		
+		if(nColumn == 2)
+		{ 
+			birthday = pItem->GetValue();
+			int b = _wtoi(birthday);
 			data.UpdateData2(number, b);
 		}
-		else
+		if (nColumn == 1)
+		{
+			name = pItem->GetValue();
+			CT2CA pszConvertedAnsiString(name);//Converting an MFC CString to a std::string
+			std::string n(pszConvertedAnsiString);
 			data.UpdateData(number, n);
-		
-
+		}
 		
 	}
 	catch (SQLException &ex) {
