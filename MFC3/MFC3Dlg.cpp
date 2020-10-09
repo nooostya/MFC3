@@ -173,8 +173,6 @@ HCURSOR CMFC3Dlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
 }
-
-
 void CMFC3Dlg::OnBnClickedButton1()//filter by name button
 {
 	
@@ -307,6 +305,7 @@ void CMFC3Dlg::OnBnClickedbtnexport()
 
 }
 
+
 void CMFC3Dlg::XMLImport(UserDataList & dataList) 
 {
 	CFileDialog dlg(TRUE, NULL, NULL, OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, L"XML Files (*.xml)|*.xml||", NULL, 0);
@@ -370,5 +369,71 @@ void CMFC3Dlg::OnGridItemChanged(CBCGPGridItem * pItem, int nRow, int nColumn)
 	}
 	catch (SQLException &ex) {
 		MessageBoxA(NULL, ex.what(), "error", MB_OK);
+	}
+}
+int CMFC3Dlg::InsertNewRecordGrid(int nPos)
+{
+	CBCGPGridRow* pRow = nGrid.CreateRow(nGrid.GetColumnCount());
+	pRow->GetItem(0)->SetValue(_T(""));
+	pRow->GetItem(1)->SetValue(_T(""));
+	pRow->GetItem(2)->SetValue(_T(""));
+	int nIndex = (nPos == 0) ? nGrid.InsertRowBefore(0, pRow) : nGrid.InsertRowAfter(nPos - 1, pRow);
+	nGrid.AdjustLayout();
+	return nIndex;
+
+}
+LRESULT  CMFC3Dlg::OnEndGridLabelEdit(WPARAM, LPARAM lp)
+{
+	BCGPGRID_ITEM_INFO* pii = (BCGPGRID_ITEM_INFO*)lp;
+	ASSERT(pii != NULL);
+	ASSERT_VALID(pii->pItem);
+
+	// Handle ENTER after in-place edit is closed
+	if ((pii->dwResultCode & EndEdit_Return) != 0)
+
+	{
+		OnInplaceGridEditEnter(pii->pItem);
+		return 0;
+	}
+	return 0;
+}
+void CMFC3Dlg::OnInplaceGridEditEnter(CBCGPGridItem* pItem)
+{
+	if (!m_bOption6)
+	{
+		return;
+	}
+
+	ASSERT_VALID(pItem);
+	CBCGPGridItemID id = pItem->GetGridItemID();
+	int nLastValuableRow = nGrid.GetRowCount() - 1;
+
+	//-----------------------------------------
+	// Customize ENTER handling, move selection
+	//-----------------------------------------
+	if (id.m_nRow < nLastValuableRow)
+	{
+		id.m_nRow++;		// Go to next row
+		nGrid.SetCurSel(id);
+	}
+	else if (m_bOption7)
+	{
+		nGrid.InsertNewRecord(nLastValuableRow + 1);
+
+		// Go to new row
+		id.m_nRow = nLastValuableRow + 1;
+		//id.m_nColumn = 0; // Uncomment this line to go to first column on ENTER
+
+		nGrid.SetCurSel(id);
+	}
+
+	ContinueInplaceEditing();
+}
+void CMFC3Dlg::ContinueInplaceEditing()
+{
+	CBCGPGridRow* pSel = nGrid.GetCurSel();
+	if (pSel != NULL && pSel->GetInPlaceWnd() == NULL)
+	{
+		SendMessage(WM_KEYDOWN, VK_F2);
 	}
 }
