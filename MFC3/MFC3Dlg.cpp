@@ -38,6 +38,8 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CBCGPDialog)
 END_MESSAGE_MAP()
 CAboutDlg::CAboutDlg() : CBCGPDialog(IDD_ABOUTBOX)
 {
+	//}}AFX_DATA_INIT
+	
 	EnableVisualManagerStyle(TRUE, TRUE);
 }
 
@@ -76,13 +78,79 @@ BEGIN_MESSAGE_MAP(CMFC3Dlg, CBCGPDialog)
 	ON_BN_CLICKED(btnDelete, &CMFC3Dlg::OnBnClickedbtndelete)
 	ON_BN_CLICKED(btnImport, &CMFC3Dlg::OnBnClickedbtnimport)
 	ON_BN_CLICKED(btnExport, &CMFC3Dlg::OnBnClickedbtnexport)
+	ON_REGISTERED_MESSAGE(BCGM_GRID_ITEM_ENDINPLACEEDIT, OnEndLabelEdit)
 END_MESSAGE_MAP()
 
+void CMFC3Dlg::SetGridOption(int nIndex, BOOL bEnable)
+{
+	switch (nIndex)
+	{
+	case 0:
+		m_bOption1 = bEnable;
+		return;
+	case 1:
+		m_bOption2 = bEnable;
+		return;
+	case 2:
+		m_bOption3 = bEnable;
+		return;
+	case 3:
+		m_bOption4 = bEnable;
+		return;
+	case 4:
+		m_bOption5 = bEnable;
+		return;
+	case 5:
+		m_bOption6 = bEnable;
+		return;
+	case 6:
+		m_bOption7 = bEnable;
+		return;
+	}
+
+	ASSERT(FALSE);
+}
+
+ BOOL CMFC3Dlg::GetGridOption(int nIndex)
+{
+	switch (nIndex)
+	{
+	case 0:
+		return m_bOption1;
+	case 1:
+		return m_bOption2;
+	case 2:
+		return m_bOption3;
+	case 3:
+		return m_bOption4;
+	case 4:
+		return m_bOption5;
+	case 5:
+		return m_bOption6;
+	case 6:
+		return m_bOption7;
+	}
+
+	ASSERT(FALSE);
+	return FALSE;
+}
 
 // CMFC3Dlg message handlers
 
 BOOL CMFC3Dlg::OnInitDialog()
 {
+	if (m_nGrid != NULL)
+	{
+		ASSERT_VALID(m_nGrid);
+
+		m_bOption1 = m_nGrid->GetOption(0);
+		m_bOption2 = m_nGrid->GetOption(1);
+		m_bOption3 = m_nGrid->GetOption(2);
+		m_bOption4 = m_nGrid->GetOption(3);
+		m_bOption5 = m_nGrid->GetOption(4);
+		m_bOption6 = m_nGrid->GetOption(5);
+		m_bOption7 = m_nGrid->GetOption(6);
+	}
 	CBCGPDialog::OnInitDialog();
 
 	// Add "About..." menu item to system menu.
@@ -382,7 +450,7 @@ int CMFC3Dlg::InsertNewRecordGrid(int nPos)
 	return nIndex;
 
 }
-LRESULT  CMFC3Dlg::OnEndGridLabelEdit(WPARAM, LPARAM lp)
+LRESULT CMFC3Dlg::OnEndLabelEdit(WPARAM, LPARAM lp)
 {
 	BCGPGRID_ITEM_INFO* pii = (BCGPGRID_ITEM_INFO*)lp;
 	ASSERT(pii != NULL);
@@ -392,12 +460,12 @@ LRESULT  CMFC3Dlg::OnEndGridLabelEdit(WPARAM, LPARAM lp)
 	if ((pii->dwResultCode & EndEdit_Return) != 0)
 
 	{
-		OnInplaceGridEditEnter(pii->pItem);
+		OnInplaceEditEnter(pii->pItem);
 		return 0;
 	}
 	return 0;
 }
-void CMFC3Dlg::OnInplaceGridEditEnter(CBCGPGridItem* pItem)
+void CMFC3Dlg::OnInplaceEditEnter(CBCGPGridItem* pItem)
 {
 	if (!m_bOption6)
 	{

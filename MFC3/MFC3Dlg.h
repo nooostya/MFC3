@@ -15,7 +15,8 @@ class GridListener
 public:
 	virtual void OnGridItemChanged(CBCGPGridItem *  pItem, int nRow, int nColumn) = 0;
 	virtual int InsertNewRecordGrid(int nPos) = 0;
-	virtual LRESULT OnEndGridLabelEdit(WPARAM wp, LPARAM lp) = 0;
+	virtual void SetGridOption(int nIndex, BOOL bEnable) = 0;
+	virtual BOOL GetGridOption(int nIndex) = 0;
 };
 
 class MyGridControl : public CBCGPGridCtrl
@@ -40,10 +41,16 @@ public:
 		}
 		return 0;
 	}
-	LRESULT OnEndLabelEdit(WPARAM wp, LPARAM lp) {
+	void SetOption(int nIndex, BOOL bEnable) {
 		if (m_listener != 0) {
-			m_listener->OnEndGridLabelEdit(wp,lp);
+			m_listener->SetGridOption(nIndex, bEnable);
 		}
+	}
+	BOOL GetOption(int nIndex) const {
+		if (m_listener != 0) {
+			m_listener->GetGridOption(nIndex);
+		}
+		return true;
 	}
 private:
 	GridListener* m_listener;
@@ -68,15 +75,13 @@ public:
 // Implementation
 protected:
 	HICON m_hIcon;
-
+	//MyGridControl* m_pGrid;
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
-	BOOL	m_bOption6; // Move to the next row on ENTER
-	BOOL	m_bOption7; // Add new row after last row on ENTER/DOWN
 public:
 	afx_msg void OnBnClickedButton1();
 	
@@ -97,15 +102,22 @@ public:
 	void DataSort(UserDataList & dataList, UserDataList & dataList2);
 	virtual void OnGridItemChanged(CBCGPGridItem *  pItem, int nRow, int nColumn);
 	virtual int InsertNewRecordGrid(int nPos);
+	virtual void SetGridOption(int nIndex, BOOL bEnable);
+	virtual BOOL GetGridOption(int nIndex);
+	afx_msg LRESULT OnEndLabelEdit(WPARAM, LPARAM lp);
 
-	afx_msg LRESULT OnEndGridLabelEdit(WPARAM, LPARAM lp);
-
-	void OnInplaceGridEditEnter(CBCGPGridItem * pItem);
+	void OnInplaceEditEnter(CBCGPGridItem * pItem);
 
 	void ContinueInplaceEditing();
-
-
+	BOOL m_bOption1;
+	BOOL m_bOption2;
+	BOOL m_bOption3;
+	BOOL m_bOption4;
+	BOOL m_bOption5;
+	BOOL m_bOption6;
+	BOOL m_bOption7;
 	MyGridControl nGrid;
+	MyGridControl* m_nGrid;
 	SQL data;
 	enum EndEditResultFlags
 	{
@@ -132,23 +144,5 @@ public:
 		EndEdit_KillFocus = 0x10000,
 		EndEdit_Selection = 0x20000,
 		EndEdit_Layout = 0x40000
-	};
-	enum Direction
-	{
-		NoMove = 0x0,
-		Up = 0x1,
-		Down = 0x2,
-		Left = 0x4,
-		Right = 0x8,
-
-		PrevColumn = 0x10,
-		NextColumn = 0x20,
-		FirstColumn = 0x40,
-		LastColumn = 0x80,
-
-		PrevRow = 0x100,
-		NextRow = 0x200,
-		FirstRow = 0x400,
-		LastRow = 0x800
 	};
 };
