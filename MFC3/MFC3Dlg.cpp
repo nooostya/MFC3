@@ -81,76 +81,13 @@ BEGIN_MESSAGE_MAP(CMFC3Dlg, CBCGPDialog)
 	ON_REGISTERED_MESSAGE(BCGM_GRID_ITEM_ENDINPLACEEDIT, OnEndLabelEdit)
 END_MESSAGE_MAP()
 
-void CMFC3Dlg::SetGridOption(int nIndex, BOOL bEnable)
-{
-	switch (nIndex)
-	{
-	case 0:
-		m_bOption1 = bEnable;
-		return;
-	case 1:
-		m_bOption2 = bEnable;
-		return;
-	case 2:
-		m_bOption3 = bEnable;
-		return;
-	case 3:
-		m_bOption4 = bEnable;
-		return;
-	case 4:
-		m_bOption5 = bEnable;
-		return;
-	case 5:
-		m_bOption6 = bEnable;
-		return;
-	case 6:
-		m_bOption7 = bEnable;
-		return;
-	}
 
-	ASSERT(FALSE);
-}
-
- BOOL CMFC3Dlg::GetGridOption(int nIndex)
-{
-	switch (nIndex)
-	{
-	case 0:
-		return m_bOption1;
-	case 1:
-		return m_bOption2;
-	case 2:
-		return m_bOption3;
-	case 3:
-		return m_bOption4;
-	case 4:
-		return m_bOption5;
-	case 5:
-		return m_bOption6;
-	case 6:
-		return m_bOption7;
-	}
-
-	ASSERT(FALSE);
-	return FALSE;
-}
 
 // CMFC3Dlg message handlers
 
 BOOL CMFC3Dlg::OnInitDialog()
 {
-	if (m_nGrid != NULL)
-	{
-		ASSERT_VALID(m_nGrid);
-
-		m_bOption1 = m_nGrid->GetOption(0);
-		m_bOption2 = m_nGrid->GetOption(1);
-		m_bOption3 = m_nGrid->GetOption(2);
-		m_bOption4 = m_nGrid->GetOption(3);
-		m_bOption5 = m_nGrid->GetOption(4);
-		m_bOption6 = m_nGrid->GetOption(5);
-		m_bOption7 = m_nGrid->GetOption(6);
-	}
+	
 	CBCGPDialog::OnInitDialog();
 
 	// Add "About..." menu item to system menu.
@@ -177,22 +114,21 @@ BOOL CMFC3Dlg::OnInitDialog()
 	//  when the application's main window is not a dialog
 	SetIcon(m_hIcon, TRUE);			// Set big icon
 	SetIcon(m_hIcon, FALSE);		// Set small icon
-	
+
 	nGrid.SetListener(this);
 
 	nGrid.CreateOnPlaceHolder(this, pictureGrid);
 	nGrid.InsertColumn(0, L"RowID", 100);
 	nGrid.InsertColumn(1, L"Name", 150);
-	nGrid.InsertColumn(2, L"Birthday",100);
-	
+	nGrid.InsertColumn(2, L"Birthday", 100);
+
 	data.Open("C:\\DataBase\\first.db");
 	std::list<userData> dataList;
 	data.DataIntoList(dataList);
 	Output(dataList);
-	
+
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
-
 void CMFC3Dlg::OnSysCommand(UINT nID, LPARAM lParam)
 {
 	if ((nID & 0xFFF0) == IDM_ABOUTBOX)
@@ -439,18 +375,7 @@ void CMFC3Dlg::OnGridItemChanged(CBCGPGridItem * pItem, int nRow, int nColumn)
 		MessageBoxA(NULL, ex.what(), "error", MB_OK);
 	}
 }
-int CMFC3Dlg::InsertNewRecordGrid(int nPos)
-{
-	CBCGPGridRow* pRow = nGrid.CreateRow(nGrid.GetColumnCount());
-	pRow->GetItem(0)->SetValue(_T(""));
-	pRow->GetItem(1)->SetValue(_T(""));
-	pRow->GetItem(2)->SetValue(_T(""));
-	int nIndex = (nPos == 0) ? nGrid.InsertRowBefore(0, pRow) : nGrid.InsertRowAfter(nPos - 1, pRow);
-	nGrid.AdjustLayout();
-	return nIndex;
-
-}
-LRESULT CMFC3Dlg::OnEndLabelEdit(WPARAM, LPARAM lp)
+LRESULT CMFC3Dlg::OnEndLabelEdit(WPARAM wp, LPARAM lp)
 {
 	BCGPGRID_ITEM_INFO* pii = (BCGPGRID_ITEM_INFO*)lp;
 	ASSERT(pii != NULL);
@@ -458,50 +383,32 @@ LRESULT CMFC3Dlg::OnEndLabelEdit(WPARAM, LPARAM lp)
 
 	// Handle ENTER after in-place edit is closed
 	if ((pii->dwResultCode & EndEdit_Return) != 0)
-
 	{
-		OnInplaceEditEnter(pii->pItem);
+		nGrid.OnInplaceEditEnter(pii->pItem);
 		return 0;
 	}
-	return 0;
 }
-void CMFC3Dlg::OnInplaceEditEnter(CBCGPGridItem* pItem)
+void CMFC3Dlg::OnInplaceGridEditEnter(CBCGPGridItem* pItem)
 {
-	if (!m_bOption6)
-	{
-		return;
-	}
-
 	ASSERT_VALID(pItem);
 	CBCGPGridItemID id = pItem->GetGridItemID();
 	int nLastValuableRow = nGrid.GetRowCount() - 1;
-
-	//-----------------------------------------
-	// Customize ENTER handling, move selection
-	//-----------------------------------------
 	if (id.m_nRow < nLastValuableRow)
 	{
 		id.m_nRow++;		// Go to next row
 		nGrid.SetCurSel(id);
 	}
-	else if (m_bOption7)
-	{
-		nGrid.InsertNewRecord(nLastValuableRow + 1);
-
-		// Go to new row
-		id.m_nRow = nLastValuableRow + 1;
-		//id.m_nColumn = 0; // Uncomment this line to go to first column on ENTER
-
-		nGrid.SetCurSel(id);
-	}
-
-	ContinueInplaceEditing();
+	nGrid.InsertNewRecord(nLastValuableRow + 1);
 }
-void CMFC3Dlg::ContinueInplaceEditing()
+int CMFC3Dlg::InsertNewRecordGrid(int nPos)
 {
-	CBCGPGridRow* pSel = nGrid.GetCurSel();
-	if (pSel != NULL && pSel->GetInPlaceWnd() == NULL)
-	{
-		SendMessage(WM_KEYDOWN, VK_F2);
-	}
+	CBCGPGridRow* pRow = nGrid.CreateRow(nGrid.GetColumnCount());
+	pRow->GetItem(0)->SetValue(_T(""));
+	pRow->GetItem(1)->SetValue(_T(""));
+	pRow->GetItem(2)->SetValue(_T(""));
+	
+	int nIndex = (nPos == 0) ? nGrid.InsertRowBefore(0, pRow) : nGrid.InsertRowAfter(nPos - 1, pRow);
+	nGrid.AdjustLayout();
+	std::list<userData> dataList;
+	return nIndex;
 }

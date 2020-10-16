@@ -15,8 +15,8 @@ class GridListener
 public:
 	virtual void OnGridItemChanged(CBCGPGridItem *  pItem, int nRow, int nColumn) = 0;
 	virtual int InsertNewRecordGrid(int nPos) = 0;
-	virtual void SetGridOption(int nIndex, BOOL bEnable) = 0;
-	virtual BOOL GetGridOption(int nIndex) = 0;
+	virtual void OnInplaceGridEditEnter(CBCGPGridItem * pItem) =0;
+	//virtual LRESULT OnEndGridLabelEdit(WPARAM wp, LPARAM lp)=0;
 };
 
 class MyGridControl : public CBCGPGridCtrl
@@ -31,8 +31,8 @@ public:
 	}
 	void OnItemChanged(CBCGPGridItem *  pItem, int nRow, int nColumn) override
 	{
-		if (m_listener!=0){
-		m_listener->OnGridItemChanged(pItem, nRow, nColumn);
+		if (m_listener != 0) {
+			m_listener->OnGridItemChanged(pItem, nRow, nColumn);
 		}
 	}
 	int InsertNewRecord(int nPos) {
@@ -41,17 +41,12 @@ public:
 		}
 		return 0;
 	}
-	void SetOption(int nIndex, BOOL bEnable) {
+	void OnInplaceEditEnter(CBCGPGridItem * pItem) {
 		if (m_listener != 0) {
-			m_listener->SetGridOption(nIndex, bEnable);
+			m_listener->OnInplaceGridEditEnter(pItem);
 		}
 	}
-	BOOL GetOption(int nIndex) const {
-		if (m_listener != 0) {
-			m_listener->GetGridOption(nIndex);
-		}
-		return true;
-	}
+
 private:
 	GridListener* m_listener;
 };
@@ -101,23 +96,15 @@ public:
 	void XMLImport(UserDataList & dataList);
 	void DataSort(UserDataList & dataList, UserDataList & dataList2);
 	virtual void OnGridItemChanged(CBCGPGridItem *  pItem, int nRow, int nColumn);
+
+	LRESULT OnEndLabelEdit(WPARAM, LPARAM lp);
+
+	virtual void OnInplaceGridEditEnter(CBCGPGridItem * pItem);
+
 	virtual int InsertNewRecordGrid(int nPos);
-	virtual void SetGridOption(int nIndex, BOOL bEnable);
-	virtual BOOL GetGridOption(int nIndex);
-	afx_msg LRESULT OnEndLabelEdit(WPARAM, LPARAM lp);
 
-	void OnInplaceEditEnter(CBCGPGridItem * pItem);
 
-	void ContinueInplaceEditing();
-	BOOL m_bOption1;
-	BOOL m_bOption2;
-	BOOL m_bOption3;
-	BOOL m_bOption4;
-	BOOL m_bOption5;
-	BOOL m_bOption6;
-	BOOL m_bOption7;
 	MyGridControl nGrid;
-	MyGridControl* m_nGrid;
 	SQL data;
 	enum EndEditResultFlags
 	{
