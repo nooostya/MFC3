@@ -384,7 +384,15 @@ void CMFC3Dlg::OnInplaceGridEditEnter(CBCGPGridItem* pItem)
 		id.m_nRow++;		// Go to next row
 		nGrid.SetCurSel(id);
 	}
-	nGrid.InsertNewRecord(nLastValuableRow + 1);
+	else
+	{
+		nGrid.InsertNewRecord(nLastValuableRow + 1);
+
+		// Go to new row
+		id.m_nRow = nLastValuableRow + 1;
+		//id.m_nColumn = 0; // Uncomment this line to go to first column on ENTER
+	}
+	
 }
 int CMFC3Dlg::InsertNewRecordGrid(int nPos)
 {
