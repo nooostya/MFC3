@@ -345,16 +345,16 @@ void CMFC3Dlg::OnGridItemChanged(CBCGPGridItem * pItem, int nRow, int nColumn)
 			std::string n(pszConvertedAnsiString);
 			data.UpdateData(number, n);
 		}
-		if (pRow->GetData() == 0){
-			std::list<userData> dataList;
-			userData c;
-			c.name = "0";
-			c.birthday = 0;
-			dataList.push_back(c);
-			pRow->GetItem(0)->SetReadOnly(TRUE);
-			pRow->SetData(pItem->GetValue());
-			data.insertData2(dataList);
-		}
+		//if (pRow->GetData() == 0){
+		//	std::list<userData> dataList;
+		//	userData c;
+		//	c.name = "0";
+		//	c.birthday = 0;
+		//	dataList.push_back(c);
+		//	pRow->GetItem(0)->SetReadOnly(TRUE);
+		//	pRow->SetData(pItem->GetValue());
+		//	data.insertData2(dataList);
+		//}
 		
 	}
 	catch (SQLException &ex) {
@@ -381,23 +381,21 @@ void CMFC3Dlg::OnInplaceGridEditEnter(CBCGPGridItem* pItem)
 	int nLastValuableRow = nGrid.GetRowCount() - 1;
 	if (id.m_nRow < nLastValuableRow)
 	{
-		id.m_nRow++;		// Go to next row
+		id.m_nRow++;		
 		nGrid.SetCurSel(id);
 	}
 	else
 	{
 		nGrid.InsertNewRecord(nLastValuableRow + 1);
-
-		// Go to new row
 		id.m_nRow = nLastValuableRow + 1;
-		//id.m_nColumn = 0; // Uncomment this line to go to first column on ENTER
 	}
 	
 }
 int CMFC3Dlg::InsertNewRecordGrid(int nPos)
 {
 	CBCGPGridRow* pRow = nGrid.CreateRow(nGrid.GetColumnCount());
-	pRow->GetItem(0)->SetValue(_T(""));
+	pRow->GetItem(0)->SetValue(nPos+1);//нужно чтобы при добавляении новой строки ей давался номер +1 к предыдущей
+	pRow->GetItem(0)->SetReadOnly(TRUE);
 	pRow->GetItem(1)->SetValue(_T(""));
 	pRow->GetItem(2)->SetValue(_T(""));
 	
