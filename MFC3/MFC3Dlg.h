@@ -82,7 +82,6 @@ public:
 	
 	int number = 0;
 	fileOperations op;
-	afx_msg void OnBnClickedbtninsert();
 	CString birthday;
 	CString name;
 	CString name_f;

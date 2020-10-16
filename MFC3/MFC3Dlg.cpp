@@ -62,10 +62,7 @@ CMFC3Dlg::CMFC3Dlg(CWnd* pParent /*=nullptr*/)
 void CMFC3Dlg::DoDataExchange(CDataExchange* pDX)
 {
 	CBCGPDialog::DoDataExchange(pDX);
-	DDX_Text(pDX, txtBirthday, birthday);
-	DDX_Text(pDX, txtName, name);
 	DDX_Text(pDX, txtName2, name_f);
-	DDX_Text(pDX, txtNumber2, Nnumber);
 }
 
 BEGIN_MESSAGE_MAP(CMFC3Dlg, CBCGPDialog)
@@ -73,7 +70,6 @@ BEGIN_MESSAGE_MAP(CMFC3Dlg, CBCGPDialog)
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
 	ON_BN_CLICKED(IDC_BUTTON1, &CMFC3Dlg::OnBnClickedButton1)
-	ON_BN_CLICKED(btnInsert, &CMFC3Dlg::OnBnClickedbtninsert)
 	ON_BN_CLICKED(btnReset, &CMFC3Dlg::OnBnClickedbtnreset)
 	ON_BN_CLICKED(btnDelete, &CMFC3Dlg::OnBnClickedbtndelete)
 	ON_BN_CLICKED(btnImport, &CMFC3Dlg::OnBnClickedbtnimport)
@@ -197,26 +193,6 @@ void CMFC3Dlg::OnBnClickedButton1()//filter by name button
 	}
 }
 
-
-void CMFC3Dlg::OnBnClickedbtninsert()
-{
-	UpdateData(TRUE);
-	std::list<userData> dataList;
-	userData c;
-	CT2CA pszConvertedAnsiString(name);//Converting an MFC CString to a std::string
-	std::string n(pszConvertedAnsiString);
-	c.name = n;
-	c.birthday = _wtoi(birthday);
-	c.number = _wtoi(Nnumber);
-	dataList.push_back(c);
-
-	data.insertData(dataList);
-	Output(dataList);
-	Nnumber = "";
-	name = "";
-	birthday = "";
-	UpdateData(FALSE);
-}
 
 void CMFC3Dlg::OnBnClickedbtnreset()
 {
