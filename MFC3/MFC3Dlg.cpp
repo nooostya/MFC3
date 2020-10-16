@@ -369,6 +369,16 @@ void CMFC3Dlg::OnGridItemChanged(CBCGPGridItem * pItem, int nRow, int nColumn)
 			std::string n(pszConvertedAnsiString);
 			data.UpdateData(number, n);
 		}
+		if (pRow->GetData() == 0){
+			std::list<userData> dataList;
+			userData c;
+			c.name = "0";
+			c.birthday = 0;
+			dataList.push_back(c);
+			pRow->GetItem(0)->SetReadOnly(TRUE);
+			pRow->SetData(pItem->GetValue());
+			data.insertData2(dataList);
+		}
 		
 	}
 	catch (SQLException &ex) {
@@ -409,6 +419,5 @@ int CMFC3Dlg::InsertNewRecordGrid(int nPos)
 	
 	int nIndex = (nPos == 0) ? nGrid.InsertRowBefore(0, pRow) : nGrid.InsertRowAfter(nPos - 1, pRow);
 	nGrid.AdjustLayout();
-	std::list<userData> dataList;
 	return nIndex;
 }
