@@ -16,7 +16,8 @@ public:
 	virtual void OnGridItemChanged(CBCGPGridItem *  pItem, int nRow, int nColumn) = 0;
 	virtual int InsertNewRecordGrid(int nPos) = 0;
 	virtual void OnInplaceGridEditEnter(CBCGPGridItem * pItem) =0;
-	//virtual LRESULT OnEndGridLabelEdit(WPARAM wp, LPARAM lp)=0;
+	virtual void ContinueGridInplaceEditing()=0;
+
 };
 
 class MyGridControl : public CBCGPGridCtrl
@@ -44,6 +45,11 @@ public:
 	void OnInplaceEditEnter(CBCGPGridItem * pItem) {
 		if (m_listener != 0) {
 			m_listener->OnInplaceGridEditEnter(pItem);
+		}
+	}
+	void ContinueInplaceEditing() {
+		if (m_listener != 0) {
+			m_listener->ContinueGridInplaceEditing();
 		}
 	}
 
@@ -75,10 +81,15 @@ protected:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
 	afx_msg void OnPaint();
+	
 	afx_msg HCURSOR OnQueryDragIcon();
 	DECLARE_MESSAGE_MAP()
 public:
 	afx_msg void OnBnClickedButton1();
+
+	virtual void OnOK();
+
+	
 	
 	int number = 0;
 	fileOperations op;
@@ -99,6 +110,8 @@ public:
 	LRESULT OnEndLabelEdit(WPARAM, LPARAM lp);
 
 	virtual void OnInplaceGridEditEnter(CBCGPGridItem * pItem);
+
+	virtual void ContinueGridInplaceEditing();
 
 	virtual int InsertNewRecordGrid(int nPos);
 

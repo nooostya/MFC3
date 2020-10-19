@@ -30,6 +30,8 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 
+
+
 // Implementation
 protected:
 	DECLARE_MESSAGE_MAP()
@@ -167,6 +169,8 @@ void CMFC3Dlg::OnPaint()
 	}
 }
 
+
+
 // The system calls this function to obtain the cursor to display while the user drags
 //  the minimized window.
 HCURSOR CMFC3Dlg::OnQueryDragIcon()
@@ -192,7 +196,15 @@ void CMFC3Dlg::OnBnClickedButton1()//filter by name button
 		MessageBoxA(NULL, ex.what(),"error",MB_OK);
 	}
 }
-
+void CMFC3Dlg::OnOK()
+{
+	nGrid.RemoveAll();
+	std::list<userData> dataList;
+	data.DataIntoList(dataList);
+	Output(dataList);
+	//return;
+	//CBCGPDialog::OnOK(); // This will close the dialog and DoModal will return.
+}
 
 void CMFC3Dlg::OnBnClickedbtnreset()
 {
@@ -331,6 +343,7 @@ void CMFC3Dlg::OnGridItemChanged(CBCGPGridItem * pItem, int nRow, int nColumn)
 	try {
 		CBCGPGridRow* pRow = nGrid.GetCurSel();
 		number = pRow->GetData();
+		int count;
 		
 		if(nColumn == 2)
 		{ 
@@ -344,18 +357,7 @@ void CMFC3Dlg::OnGridItemChanged(CBCGPGridItem * pItem, int nRow, int nColumn)
 			CT2CA pszConvertedAnsiString(name);//Converting an MFC CString to a std::string
 			std::string n(pszConvertedAnsiString);
 			data.UpdateData(number, n);
-		}
-		//if (pRow->GetData() == 0){
-		//	std::list<userData> dataList;
-		//	userData c;
-		//	c.name = "0";
-		//	c.birthday = 0;
-		//	dataList.push_back(c);
-		//	pRow->GetItem(0)->SetReadOnly(TRUE);
-		//	pRow->SetData(pItem->GetValue());
-		//	data.insertData2(dataList);
-		//}
-		
+		}		
 	}
 	catch (SQLException &ex) {
 		MessageBoxA(NULL, ex.what(), "error", MB_OK);
@@ -388,16 +390,34 @@ void CMFC3Dlg::OnInplaceGridEditEnter(CBCGPGridItem* pItem)
 	{
 		nGrid.InsertNewRecord(nLastValuableRow + 1);
 		id.m_nRow = nLastValuableRow + 1;
+		nGrid.SetCurSel(id);
 	}
+	ContinueGridInplaceEditing();
 	
+}
+void CMFC3Dlg::ContinueGridInplaceEditing()
+{
+	CBCGPGridRow* pSel = nGrid.GetCurSel();
+	if (pSel != NULL && pSel->GetInPlaceWnd() == NULL)
+	{
+		SendMessage(WM_KEYDOWN, VK_F2);
+	}
 }
 int CMFC3Dlg::InsertNewRecordGrid(int nPos)
 {
 	CBCGPGridRow* pRow = nGrid.CreateRow(nGrid.GetColumnCount());
-	pRow->GetItem(0)->SetValue(nPos+1);//нужно чтобы при добавляении новой строки ей давался номер +1 к предыдущей
+	pRow->GetItem(0)->SetValue(nPos+1);
 	pRow->GetItem(0)->SetReadOnly(TRUE);
 	pRow->GetItem(1)->SetValue(_T(""));
 	pRow->GetItem(2)->SetValue(_T(""));
+	pRow->SetData(nPos + 1);
+	//nGrid.SetFocus();
+	std::list<userData> dataList;
+	userData c;
+	c.name = "0";
+	c.birthday = 0;
+	dataList.push_back(c);
+	data.insertData2(dataList);
 	
 	int nIndex = (nPos == 0) ? nGrid.InsertRowBefore(0, pRow) : nGrid.InsertRowAfter(nPos - 1, pRow);
 	nGrid.AdjustLayout();
