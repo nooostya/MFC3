@@ -223,12 +223,18 @@ void CMFC3Dlg::OnBnClickedbtndelete()
 		std::list<userData> dataList;
 		//nGrid.GetCurSelItem();
 		CBCGPGridRow* pRow = nGrid.GetCurSel();
+		if (nGrid.GetCurSel() == 0) {
+			throw SQLException("nothing selected");
+		}
 		number = pRow->GetData();
+		
 		data.DeleteItem(dataList, number);
 		data.DataIntoList(dataList);
 		tr.commit();
+		//nGrid.SetCurSel(pRow - 1, TRUE);
 		nGrid.RemoveAll();
 		Output(dataList);
+		
 	}
 	catch (SQLException &ex) {
 		MessageBoxA(NULL, ex.what(), "error", MB_OK);
