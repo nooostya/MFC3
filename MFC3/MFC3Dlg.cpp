@@ -221,20 +221,25 @@ void CMFC3Dlg::OnBnClickedbtndelete()
 	try {
 		Transaction tr(data);
 		std::list<userData> dataList;
-		//nGrid.GetCurSelItem();
 		CBCGPGridRow* pRow = nGrid.GetCurSel();
 		if (nGrid.GetCurSel() == 0) {
+	
 			throw SQLException("nothing selected");
 		}
 		number = pRow->GetData();
-		
+		//nGrid.SetCurSel(id);
 		data.DeleteItem(dataList, number);
 		data.DataIntoList(dataList);
 		tr.commit();
-		//nGrid.SetCurSel(pRow - 1, TRUE);
+		
 		nGrid.RemoveAll();
 		Output(dataList);
-		
+		/*CBCGPGridItemID id = pItem->GetGridItemID();
+		int nLastValuableRow = nGrid.GetRowCount() - 1;
+		if (id.m_nRow < nLastValuableRow)
+		{
+			id.m_nRow++;
+		}*/
 	}
 	catch (SQLException &ex) {
 		MessageBoxA(NULL, ex.what(), "error", MB_OK);
@@ -390,14 +395,16 @@ void CMFC3Dlg::OnInplaceGridEditEnter(CBCGPGridItem* pItem)
 	if (id.m_nRow < nLastValuableRow)
 	{
 		id.m_nRow++;		
-		nGrid.SetCurSel(id);
 	}
 	else
 	{
 		nGrid.InsertNewRecord(nLastValuableRow + 1);
 		id.m_nRow = nLastValuableRow + 1;
-		nGrid.SetCurSel(id);
 	}
+	if (id.m_nColumn == 0) {
+		id.m_nColumn = 1;
+	}
+	nGrid.SetCurSel(id);
 	ContinueGridInplaceEditing();
 	
 }
