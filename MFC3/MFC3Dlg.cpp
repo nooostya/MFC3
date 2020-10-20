@@ -52,10 +52,7 @@ void CAboutDlg::DoDataExchange(CDataExchange* pDX)
 
 CMFC3Dlg::CMFC3Dlg(CWnd* pParent /*=nullptr*/)
 	: CBCGPDialog(IDD_MFC3_DIALOG, pParent)
-	, birthday(_T(""))
-	, name(_T(""))
 	, name_f(_T(""))
-	, Nnumber(_T(""))
 {
 	m_hIcon = AfxGetApp()->LoadIcon(IDR_MAINFRAME);
 	EnableVisualManagerStyle(TRUE, TRUE);
@@ -71,11 +68,11 @@ BEGIN_MESSAGE_MAP(CMFC3Dlg, CBCGPDialog)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
-	ON_BN_CLICKED(IDC_BUTTON1, &CMFC3Dlg::OnBnClickedButton1)
-	ON_BN_CLICKED(btnReset, &CMFC3Dlg::OnBnClickedbtnreset)
-	ON_BN_CLICKED(btnDelete, &CMFC3Dlg::OnBnClickedbtndelete)
-	ON_BN_CLICKED(btnImport, &CMFC3Dlg::OnBnClickedbtnimport)
-	ON_BN_CLICKED(btnExport, &CMFC3Dlg::OnBnClickedbtnexport)
+	ON_BN_CLICKED(BtnFilter, &CMFC3Dlg::OnBnClickedBtnFilter)
+	ON_BN_CLICKED(btnReset, &CMFC3Dlg::OnBnClickedBtnReset)
+	ON_BN_CLICKED(btnDelete, &CMFC3Dlg::OnBnClickedBtnDelete)
+	ON_BN_CLICKED(btnImport, &CMFC3Dlg::OnBnClickedBtnImport)
+	ON_BN_CLICKED(btnExport, &CMFC3Dlg::OnBnClickedBtnExport)
 	ON_REGISTERED_MESSAGE(BCGM_GRID_ITEM_ENDINPLACEEDIT, OnEndLabelEdit)
 END_MESSAGE_MAP()
 
@@ -177,7 +174,7 @@ HCURSOR CMFC3Dlg::OnQueryDragIcon()
 {
 	return static_cast<HCURSOR>(m_hIcon);
 }
-void CMFC3Dlg::OnBnClickedButton1()//filter by name button
+void CMFC3Dlg::OnBnClickedBtnFilter()//filter by name button
 {
 	
 	UpdateData(TRUE); 
@@ -206,7 +203,7 @@ void CMFC3Dlg::OnOK()
 	//CBCGPDialog::OnOK(); // This will close the dialog and DoModal will return.
 }
 
-void CMFC3Dlg::OnBnClickedbtnreset()
+void CMFC3Dlg::OnBnClickedBtnReset()
 {
 	std::list<userData> dataList;
 	data.DataIntoList(dataList);
@@ -216,30 +213,27 @@ void CMFC3Dlg::OnBnClickedbtnreset()
 	UpdateData(FALSE);
 }
 
-void CMFC3Dlg::OnBnClickedbtndelete()
+void CMFC3Dlg::OnBnClickedBtnDelete()
 {
 	try {
 		Transaction tr(data);
 		std::list<userData> dataList;
 		CBCGPGridRow* pRow = nGrid.GetCurSel();
+		//CBCGPGridItemID id = pItem->GetGridItemID();
+
 		if (nGrid.GetCurSel() == 0) {
-	
 			throw SQLException("nothing selected");
 		}
-		number = pRow->GetData();
-		//nGrid.SetCurSel(id);
+
+		int number = pRow->GetData();
+		/*id.m_nRow - 1;
+		nGrid.SetCurSel(id);*/
 		data.DeleteItem(dataList, number);
 		data.DataIntoList(dataList);
 		tr.commit();
 		
 		nGrid.RemoveAll();
 		Output(dataList);
-		/*CBCGPGridItemID id = pItem->GetGridItemID();
-		int nLastValuableRow = nGrid.GetRowCount() - 1;
-		if (id.m_nRow < nLastValuableRow)
-		{
-			id.m_nRow++;
-		}*/
 	}
 	catch (SQLException &ex) {
 		MessageBoxA(NULL, ex.what(), "error", MB_OK);
@@ -257,7 +251,7 @@ void CMFC3Dlg::Output(UserDataList & dataList)
 		std::wstring birthdayStr(std::to_wstring(it->birthday));
 		
 		CBCGPGridRow* pRow = nGrid.CreateRow(nColumns);
-			
+		CString name;
 		pRow->GetItem(0)->SetValue(numberStr.c_str());
 		pRow->GetItem(0)->SetReadOnly(TRUE);
 		pRow->GetItem(1)->SetValue(it->name.c_str());
@@ -271,7 +265,7 @@ void CMFC3Dlg::Output(UserDataList & dataList)
 }
 
 
-void CMFC3Dlg::OnBnClickedbtnimport()
+void CMFC3Dlg::OnBnClickedBtnImport()
 {
 	try{
 	nGrid.RemoveAll();
@@ -294,7 +288,7 @@ void CMFC3Dlg::OnBnClickedbtnimport()
 }
 
 
-void CMFC3Dlg::OnBnClickedbtnexport()
+void CMFC3Dlg::OnBnClickedBtnExport()
 {
 	CFileDialog dlg(FALSE, _T("xml"), _T("*.xml"));
 	if (dlg.DoModal() == IDOK)
@@ -353,17 +347,18 @@ void CMFC3Dlg::OnGridItemChanged(CBCGPGridItem * pItem, int nRow, int nColumn)
 {
 	try {
 		CBCGPGridRow* pRow = nGrid.GetCurSel();
-		number = pRow->GetData();
+		int number = pRow->GetData();
 		int count;
 		
 		if(nColumn == 2)
 		{ 
-			birthday = pItem->GetValue();
+			CString birthday = pItem->GetValue();
 			int b = _wtoi(birthday);
 			data.UpdateData2(number, b);
 		}
 		if (nColumn == 1)
 		{
+			CString name;
 			name = pItem->GetValue();
 			CT2CA pszConvertedAnsiString(name);//Converting an MFC CString to a std::string
 			std::string n(pszConvertedAnsiString);
@@ -383,7 +378,7 @@ LRESULT CMFC3Dlg::OnEndLabelEdit(WPARAM wp, LPARAM lp)
 	// Handle ENTER after in-place edit is closed
 	if ((pii->dwResultCode & EndEdit_Return) != 0)
 	{
-		nGrid.OnInplaceEditEnter(pii->pItem);
+		OnInplaceGridEditEnter(pii->pItem);
 		return 0;
 	}
 }
@@ -398,7 +393,8 @@ void CMFC3Dlg::OnInplaceGridEditEnter(CBCGPGridItem* pItem)
 	}
 	else
 	{
-		nGrid.InsertNewRecord(nLastValuableRow + 1);
+		//nGrid.InsertNewRecord(nLastValuableRow + 1);
+		InsertNewRecordGrid(nLastValuableRow + 1);
 		id.m_nRow = nLastValuableRow + 1;
 	}
 	if (id.m_nColumn == 0) {

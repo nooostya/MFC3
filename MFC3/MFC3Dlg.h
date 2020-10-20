@@ -36,22 +36,6 @@ public:
 			m_listener->OnGridItemChanged(pItem, nRow, nColumn);
 		}
 	}
-	int InsertNewRecord(int nPos) {
-		if (m_listener != 0) {
-			m_listener->InsertNewRecordGrid(nPos);
-		}
-		return 0;
-	}
-	void OnInplaceEditEnter(CBCGPGridItem * pItem) {
-		if (m_listener != 0) {
-			m_listener->OnInplaceGridEditEnter(pItem);
-		}
-	}
-	void ContinueInplaceEditing() {
-		if (m_listener != 0) {
-			m_listener->ContinueGridInplaceEditing();
-		}
-	}
 
 private:
 	GridListener* m_listener;
@@ -79,69 +63,39 @@ protected:
 	//MyGridControl* m_pGrid;
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
-	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
-	afx_msg void OnPaint();
-	
-	afx_msg HCURSOR OnQueryDragIcon();
-	DECLARE_MESSAGE_MAP()
-public:
-	afx_msg void OnBnClickedButton1();
-
 	virtual void OnOK();
 
-	
-	
-	int number = 0;
+	afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
+	afx_msg void OnPaint();
+	afx_msg HCURSOR OnQueryDragIcon();
+
+	DECLARE_MESSAGE_MAP()
+
 	fileOperations op;
-	CString birthday;
-	CString name;
+	MyGridControl nGrid;
+	SQL data;
+
+public:
+	afx_msg void OnBnClickedBtnFilter();
+	afx_msg void OnBnClickedBtnReset();
+	afx_msg void OnBnClickedBtnDelete();
+	afx_msg void OnBnClickedBtnImport();
+	afx_msg void OnBnClickedBtnExport();
+
 	CString name_f;
-	CString pathName;
-	afx_msg void OnBnClickedbtnreset();
-	afx_msg void OnBnClickedbtndelete();
+	
 	void Output(UserDataList & dataList);
-	afx_msg void OnBnClickedbtnimport();
-	CString Nnumber;
-	afx_msg void OnBnClickedbtnexport();
 	void XMLImport(UserDataList & dataList);
 	void DataSort(UserDataList & dataList, UserDataList & dataList2);
-	virtual void OnGridItemChanged(CBCGPGridItem *  pItem, int nRow, int nColumn);
+	
 
 	LRESULT OnEndLabelEdit(WPARAM, LPARAM lp);
 
+	virtual void OnGridItemChanged(CBCGPGridItem *  pItem, int nRow, int nColumn);
 	virtual void OnInplaceGridEditEnter(CBCGPGridItem * pItem);
-
 	virtual void ContinueGridInplaceEditing();
-
 	virtual int InsertNewRecordGrid(int nPos);
 
-
-	MyGridControl nGrid;
-	SQL data;
-	enum EndEditResultFlags
-	{
-		EndEdit_NoResult = 0x0,
-		EndEdit_OK = 0x1,
-		EndEdit_Cancel = 0x2,
-		EndEdit_AutoApply = 0x4,
-
-		// Key reasons:
-		EndEdit_Return = 0x10,
-		EndEdit_Tab = 0x20,
-		EndEdit_Left = 0x40,
-		EndEdit_Right = 0x80,
-		EndEdit_Up = 0x100,
-		EndEdit_Down = 0x200,
-		EndEdit_Escape = 0x400,
-		EndEdit_Shift = 0x1000,
-		EndEdit_Ctrl = 0x2000,
-		EndEdit_Home = 0x4000,
-		EndEdit_End = 0x8000,
-		EndEdit_KeyMask = 0xfff0,
-
-		// Activation reasons:
-		EndEdit_KillFocus = 0x10000,
-		EndEdit_Selection = 0x20000,
-		EndEdit_Layout = 0x40000
-	};
+	const int EndEdit_Return = 0x10;
+	
 };
