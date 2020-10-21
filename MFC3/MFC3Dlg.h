@@ -14,10 +14,6 @@ class GridListener
 {
 public:
 	virtual void OnGridItemChanged(CBCGPGridItem *  pItem, int nRow, int nColumn) = 0;
-	virtual int InsertNewRecordGrid(int nPos) = 0;
-	virtual void OnInplaceGridEditEnter(CBCGPGridItem * pItem) =0;
-	virtual void ContinueGridInplaceEditing()=0;
-
 };
 
 class MyGridControl : public CBCGPGridCtrl
@@ -60,7 +56,6 @@ public:
 // Implementation
 protected:
 	HICON m_hIcon;
-	//MyGridControl* m_pGrid;
 	// Generated message map functions
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
@@ -75,27 +70,26 @@ protected:
 	MyGridControl nGrid;
 	SQL data;
 
+	CString name_f;
+
 public:
 	afx_msg void OnBnClickedBtnFilter();
 	afx_msg void OnBnClickedBtnReset();
 	afx_msg void OnBnClickedBtnDelete();
 	afx_msg void OnBnClickedBtnImport();
 	afx_msg void OnBnClickedBtnExport();
-
-	CString name_f;
 	
 	void Output(UserDataList & dataList);
 	void XMLImport(UserDataList & dataList);
-	void DataSort(UserDataList & dataList, UserDataList & dataList2);
+	void DataSelection(UserDataList & dataList, UserDataList & dataList2);
 	
 
 	LRESULT OnEndLabelEdit(WPARAM, LPARAM lp);
 
-	virtual void OnGridItemChanged(CBCGPGridItem *  pItem, int nRow, int nColumn);
-	virtual void OnInplaceGridEditEnter(CBCGPGridItem * pItem);
-	virtual void ContinueGridInplaceEditing();
-	virtual int InsertNewRecordGrid(int nPos);
+	void OnGridItemChanged(CBCGPGridItem *  pItem, int nRow, int nColumn);
+	void OnInplaceGridEditEnter(CBCGPGridItem * pItem);
+	void ContinueGridInplaceEditing();
+	int InsertNewRecordGrid(int nPos);
 
 	const int EndEdit_Return = 0x10;
-	
 };

@@ -199,8 +199,6 @@ void CMFC3Dlg::OnOK()
 	std::list<userData> dataList;
 	data.DataIntoList(dataList);
 	Output(dataList);
-	//return;
-	//CBCGPDialog::OnOK(); // This will close the dialog and DoModal will return.
 }
 
 void CMFC3Dlg::OnBnClickedBtnReset()
@@ -219,15 +217,12 @@ void CMFC3Dlg::OnBnClickedBtnDelete()
 		Transaction tr(data);
 		std::list<userData> dataList;
 		CBCGPGridRow* pRow = nGrid.GetCurSel();
-		//CBCGPGridItemID id = pItem->GetGridItemID();
 
 		if (nGrid.GetCurSel() == 0) {
 			throw SQLException("nothing selected");
 		}
 
 		int number = pRow->GetData();
-		/*id.m_nRow - 1;
-		nGrid.SetCurSel(id);*/
 		data.DeleteItem(dataList, number);
 		data.DataIntoList(dataList);
 		tr.commit();
@@ -272,14 +267,13 @@ void CMFC3Dlg::OnBnClickedBtnImport()
 	std::list<userData> dataList;
 	std::list<userData> dataList2;
 	XMLImport(dataList);
-	DataSort(dataList, dataList2);
+	DataSelection(dataList, dataList2);
 
 	data.insertData(dataList);
 	data.insertData2(dataList2);
 
 	data.DataIntoList(dataList);
 	Output(dataList);
-	//Output(dataList2);
 	UpdateData(FALSE);
 	}
 	catch (SQLException &ex) {
@@ -297,9 +291,7 @@ void CMFC3Dlg::OnBnClickedBtnExport()
 		data.DataIntoList(dataList);
 
 		ToXml(dlg.GetPathName().GetString(), dataList);
-
 	}
-
 }
 
 
@@ -315,13 +307,9 @@ void CMFC3Dlg::XMLImport(UserDataList & dataList)
 			MessageBoxA(NULL, "Failed to load xml", "RESULT", MB_OK);
 		}
 	}
-	else
-	{
-		MessageBox(NULL, L"DLG error");
-	}
 }
 
-void CMFC3Dlg::DataSort(UserDataList & dataList, UserDataList & dataList2)
+void CMFC3Dlg::DataSelection(UserDataList & dataList, UserDataList & dataList2)
 {
 	auto it = dataList.begin();
 
@@ -340,7 +328,6 @@ void CMFC3Dlg::DataSort(UserDataList & dataList, UserDataList & dataList2)
 			++it;
 		}
 	}
-
 }
 
 void CMFC3Dlg::OnGridItemChanged(CBCGPGridItem * pItem, int nRow, int nColumn)
@@ -354,7 +341,7 @@ void CMFC3Dlg::OnGridItemChanged(CBCGPGridItem * pItem, int nRow, int nColumn)
 		{ 
 			CString birthday = pItem->GetValue();
 			int b = _wtoi(birthday);
-			data.UpdateData2(number, b);
+			data.UpdateDataBirthday(number, b);
 		}
 		if (nColumn == 1)
 		{
@@ -362,7 +349,7 @@ void CMFC3Dlg::OnGridItemChanged(CBCGPGridItem * pItem, int nRow, int nColumn)
 			name = pItem->GetValue();
 			CT2CA pszConvertedAnsiString(name);//Converting an MFC CString to a std::string
 			std::string n(pszConvertedAnsiString);
-			data.UpdateData(number, n);
+			data.UpdateDataName(number, n);
 		}		
 	}
 	catch (SQLException &ex) {
@@ -393,7 +380,6 @@ void CMFC3Dlg::OnInplaceGridEditEnter(CBCGPGridItem* pItem)
 	}
 	else
 	{
-		//nGrid.InsertNewRecord(nLastValuableRow + 1);
 		InsertNewRecordGrid(nLastValuableRow + 1);
 		id.m_nRow = nLastValuableRow + 1;
 	}
@@ -420,7 +406,6 @@ int CMFC3Dlg::InsertNewRecordGrid(int nPos)
 	pRow->GetItem(1)->SetValue(_T(""));
 	pRow->GetItem(2)->SetValue(_T(""));
 	pRow->SetData(nPos + 1);
-	//nGrid.SetFocus();
 	std::list<userData> dataList;
 	userData c;
 	c.name = "0";

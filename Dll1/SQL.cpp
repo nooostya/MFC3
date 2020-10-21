@@ -153,7 +153,7 @@ void SQL::beginTransaction() {
 void SQL::commitTransaction() {
 	sqlite3_exec(db, "COMMIT TRANSACTION;", NULL, NULL, NULL);
 }
-int SQL::UpdateData( int number, std::string name)
+int SQL::UpdateDataName( int number, std::string name)
 {
 
 	sqlite3_stmt *stmt;
@@ -175,7 +175,7 @@ int SQL::UpdateData( int number, std::string name)
 		sqlite3_reset(stmt);
 	sqlite3_finalize(stmt);
 }
-int SQL::UpdateData2(int number, int birthday)
+int SQL::UpdateDataBirthday(int number, int birthday)
 {
 	sqlite3_stmt *stmt;
 	const char *sql = "UPDATE Birthdays SET birthday = ? WHERE number = ? ";
